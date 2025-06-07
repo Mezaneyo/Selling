@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4361ee">
+  <link rel="manifest" href="manifest.json">
+  <title>Marketplace Portal</title>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --success: #4cc9f0;
+      --warning: #f72585;
+      --bg-dark: #1a1a1a;
+      --text-dark: #f0f0f0;
+      --card-dark: #2d2d2d;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    
+    body.dark-mode {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+    
+    .hero {
+      text-align: center;
+      padding: 2rem;
+      max-width: 600px;
+    }
+    
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--primary);
+      transition: color 0.3s;
+    }
+    
+    .dark-mode .logo {
+      color: var(--accent);
+    }
+    
+    .cta-container {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 0.8rem 1.8rem;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-block;
+      cursor: pointer;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+    }
+    
+    .btn-outline {
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+    
+    .btn-outline:hover {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    /* Language Switcher */
+    .lang-switcher {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 100;
+    }
+    
+    .lang-btn {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+    
+    .lang-btn:hover {
+      background: #f0f0f0;
+    }
+    
+    .dark-mode .lang-btn {
+      background: var(--card-dark);
+      color: var(--text-dark);
+      border-color: #444;
+    }
+    
+    .dark-mode .lang-btn:hover {
+      background: #333;
+    }
+    
+    /* Dark Mode Toggle */
+    .dark-mode-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      z-index: 100;
+    }
+    
+    @media (max-width: 600px) {
+      .hero {
+        padding: 1rem;
+      }
+      
+      .cta-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+      
+      .lang-switcher {
+        top: 10px;
+        right: 10px;
+      }
+      
+      .lang-btn {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.7rem;
+      }
+    }
+    
+    /* Language-specific fonts */
+    body[lang="ny"] {
+      font-family: 'Noto Sans', 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <!-- Language Switcher with Chichewa (Nyanja) -->
+  <div class="lang-switcher">
+    <button class="lang-btn" onclick="changeLanguage('en')" title="English">EN</button>
+    <button class="lang-btn" onclick="changeLanguage('es')" title="Español">ES</button>
+    <button class="lang-btn" onclick="changeLanguage('ny')" title="Chichewa">NY</button>
+  </div>
+
+  <div class="hero">
+    <div class="logo">Marketplace</div>
+    <h1 id="main-heading">Connect with buyers and sellers worldwide</h1>
+    <p id="main-subheading">Join our growing community of entrepreneurs and shoppers</p>
+    <div class="cta-container">
+      <a href="buyer.html" class="btn btn-primary" id="browse-btn">Browse Products</a>
+      <a href="signup.html" class="btn btn-outline" id="sell-btn">Start Selling</a>
+    </div>
+  </div>
+
+  <!-- Dark Mode Toggle -->
+  <button class="dark-mode-toggle" id="dark-mode-toggle" aria-label="Toggle dark mode">
+    🌓
+  </button>
+
+  <script>
+    // Complete translations including Chichewa (Nyanja)
+    const translations = {
+      en: {
+        heading: "Connect with buyers and sellers worldwide",
+        subheading: "Join our growing community of entrepreneurs and shoppers",
+        browse: "Browse Products",
+        sell: "Start Selling"
+      },
+      es: {
+        heading: "Conéctate con compradores y vendedores",
+        subheading: "Únete a nuestra comunidad de emprendedores y compradores",
+        browse: "Ver Productos",
+        sell: "Comenzar a Vender"
+      },
+      ny: {
+        heading: "Lumikizanani ndi ogula ndi ogulitsa padziko lonse",
+        subheading: "Joinani mdera lathu lokulira la olemba bizinesi ndi ogula",
+        browse: "Onani Zogulitsa",
+        sell: "Yambani Kugulitsa"
+      }
+    };
+
+    // Language switching function
+    function changeLanguage(lang) {
+      // Update all translatable elements
+      document.getElementById('main-heading').textContent = translations[lang].heading;
+      document.getElementById('main-subheading').textContent = translations[lang].subheading;
+      document.getElementById('browse-btn').textContent = translations[lang].browse;
+      document.getElementById('sell-btn').textContent = translations[lang].sell;
+      
+      // Update HTML lang attribute for accessibility
+      document.documentElement.lang = lang;
+      
+      // Save preference
+      localStorage.setItem('preferredLanguage', lang);
+      
+      // Update button states
+      updateActiveLanguageButton(lang);
+    }
+    
+    // Highlight active language button
+    function updateActiveLanguageButton(activeLang) {
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        const lang = btn.textContent.toLowerCase();
+        if (lang === activeLang) {
+          btn.style.backgroundColor = 'var(--primary)';
+          btn.style.color = 'white';
+          btn.style.borderColor = 'var(--primary)';
+        } else {
+          btn.style.backgroundColor = '';
+          btn.style.color = '';
+          btn.style.borderColor = '';
+        }
+      });
+    }
+    
+    // Dark mode functionality
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const isDarkMode = document.body.classList.contains('dark-mode');
+      localStorage.setItem('darkMode', isDarkMode);
+      
+      // Update button emoji
+      document.getElementById('dark-mode-toggle').textContent = isDarkMode ? '☀️' : '🌙';
+    }
+    
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set dark mode if preferred
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('dark-mode-toggle').textContent = '☀️';
+      }
+      
+      // Set language based on preference or browser
+      const savedLang = localStorage.getItem('preferredLanguage');
+      const browserLang = navigator.language.substring(0, 2);
+      const supportedLangs = ['en', 'es', 'ny'];
+      const defaultLang = 'en';
+      
+      const langToUse = savedLang || (supportedLangs.includes(browserLang) ? browserLang : defaultLang);
+      changeLanguage(langToUse);
+      
+      // Register service worker for PWA
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+          .then(registration => {
+            console.log('ServiceWorker registered');
+          })
+          .catch(err => {
+            console.log('ServiceWorker registration failed:', err);
+          });
+      }
+      
+      // Handle PWA installation
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Show install prompt after delay
+        setTimeout(() => {
+          if (confirm(translations[langToUse].installPrompt || "Would you like to install this app?")) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(choice => {
+              if (choice.outcome === 'accepted') {
+                console.log('User accepted install');
+              }
+              deferredPrompt = null;
+            });
+          }
+        }, 15000); // Show after 15 seconds
+      });
+    });
+    
+    // Event listeners
+    document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+  </script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace</title>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --success: #4cc9f0;
+      --warning: #f72585;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f5f7fa;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+    header {
+      background-color: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-brand {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.2rem;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .nav-link {
+      color: var(--dark);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-link:hover {
+      color: var(--primary);
+    }
+    .cart-btn {
+      position: relative;
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: var(--warning);
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+    .search-container {
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.8rem 1rem 0.8rem 2.5rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 50px;
+      font-size: 1rem;
+      transition: all 0.3s;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 1rem center;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+    }
+    .filter-container {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      background-color: white;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .product-card {
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: all 0.3s;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .product-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .product-body {
+      padding: 1.5rem;
+    }
+    .product-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .product-seller {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+    .product-category {
+      display: inline-block;
+      background-color: #e2e8f0;
+      color: #4a5568;
+      padding: 0.25rem 0.5rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+    .product-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    .product-price {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.2rem;
+    }
+    .add-to-cart {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .add-to-cart:hover {
+      background-color: var(--secondary);
+    }
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #64748b;
+      grid-column: 1 / -1;
+    }
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #cbd5e0;
+    }
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 1rem;
+      }
+      .nav-links {
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-brand">Marketplace</div>
+    <div class="nav-links">
+      <a href="seller.html" class="nav-link">Sell Products</a>
+      <a href="cart.html" class="nav-link cart-btn">
+        Cart
+        <span class="cart-count" id="cart-count">0</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="search-container">
+      <input type="text" class="search-input" id="search-input" placeholder="Search products...">
+    </div>
+
+    <div class="filter-container">
+      <button class="filter-btn active" data-category="all">All</button>
+      <button class="filter-btn" data-category="electronics">Electronics</button>
+      <button class="filter-btn" data-category="fashion">Fashion</button>
+      <button class="filter-btn" data-category="home">Home</button>
+      <button class="filter-btn" data-category="sports">Sports</button>
+    </div>
+
+    <div class="products-grid" id="products-container">
+      <!-- Products will be loaded here -->
+    </div>
+  </div>
+
+  <script>
+    // DOM Elements
+    const searchInput = document.getElementById('search-input');
+    const productsContainer = document.getElementById('products-container');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const cartCount = document.getElementById('cart-count');
+
+    // Load products and cart from localStorage
+    let products = JSON.parse(localStorage.getItem('marketplaceProducts')) || [];
+    let cart = JSON.parse(localStorage.getItem('marketplaceCart')) || [];
+
+    // Update cart count
+    function updateCartCount() {
+      const count = cart.reduce((total, item) => total + item.quantity, 0);
+      cartCount.textContent = count;
+    }
+
+    // Add to cart function
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+
+      const existingItem = cart.find(item => item.id === productId);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          ...product,
+          quantity: 1
+        });
+      }
+
+      localStorage.setItem('marketplaceCart', JSON.stringify(cart));
+      updateCartCount();
+      
+      // Visual feedback
+      const btn = document.querySelector(`[data-id="${productId}"] .add-to-cart`);
+      if (btn) {
+        btn.textContent = 'Added!';
+        btn.style.backgroundColor = 'var(--success)';
+        setTimeout(() => {
+          btn.textContent = 'Add to Cart';
+          btn.style.backgroundColor = 'var(--primary)';
+        }, 1000);
+      }
+    }
+
+    // Filter and search products
+    function filterProducts() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const activeFilter = document.querySelector('.filter-btn.active').dataset.category;
+      
+      const filtered = products.filter(product => {
+        const matchesSearch = product.name.toLowerCase().includes(searchTerm) || 
+                             product.category.toLowerCase().includes(searchTerm);
+        const matchesFilter = activeFilter === 'all' || product.category === activeFilter;
+        return matchesSearch && matchesFilter;
+      });
+      
+      renderProducts(filtered);
+    }
+
+    // Render products
+    function renderProducts(productsToRender) {
+      if (productsToRender.length === 0) {
+        productsContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🔍</div>
+            <h3>No products found</h3>
+            <p>Try adjusting your search or filter</p>
+          </div>
+        `;
+        return;
+      }
+      
+      productsContainer.innerHTML = productsToRender.map(product => `
+        <div class="product-card" data-id="${product.id}">
+          <img src="${product.image}" class="product-image" alt="${product.name}">
+          <div class="product-body">
+            <span class="product-category">${product.category}</span>
+            <h3 class="product-title">${product.name}</h3>
+            <p class="product-seller">Sold by ${product.seller}</p>
+            <div class="product-footer">
+              <div class="product-price">$${product.price.toFixed(2)}</div>
+              <button class="add-to-cart" onclick="addToCart('${product.id}')">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', filterProducts);
+    
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        filterProducts();
+      });
+    });
+
+    // Initial load
+    updateCartCount();
+    filterProducts();
+  </script>
+</body>
+</html>
