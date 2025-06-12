@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History | Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3f37c9;
+            --success: #4bb543;
+            --error: #f72585;
+            --warning: #ff9800;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border: #dee2e6;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-outline {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .order-list {
+            margin-top: 2rem;
+        }
+
+        .order-item {
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+            background: white;
+            position: relative;
+        }
+
+        .order-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .order-title {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+
+        .order-date {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .order-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            background-color: rgba(75, 181, 67, 0.1);
+            color: var(--success);
+            font-size: 0.85rem;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-group {
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-weight: 500;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+            background-color: var(--light);
+            border-radius: var(--radius-md);
+            margin: 2rem 0;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--border);
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .empty-state p {
+            margin-bottom: 1.5rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            background-color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .order-products {
+            margin-top: 1rem;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+
+        .product-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--light);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .order-header {
+                flex-direction: column;
+            }
+        }
+
+        @media print {
+            .btn, .page-header, .filter-bar {
+                display: none;
+            }
+            
+            .order-item {
+                page-break-inside: avoid;
+                border: none;
+                padding: 0;
+                margin-bottom: 2rem;
+                box-shadow: none;
+            }
+            
+            body {
+                background-color: white;
+                font-size: 12pt;
+            }
+            
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+                padding: 0;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .order-item {
+            animation: fadeIn 0.3s ease forwards;
+            opacity: 0;
+        }
+        
+        .order-item:nth-child(1) { animation-delay: 0.1s; }
+        .order-item:nth-child(2) { animation-delay: 0.2s; }
+        .order-item:nth-child(3) { animation-delay: 0.3s; }
+        .order-item:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-history"></i> Order History</h1>
+            <div>
+                <a href="/" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i> Back to Shop
+                </a>
+                <button class="btn btn-outline" onclick="window.print()">
+                    <i class="fas fa-print"></i> Print All
+                </button>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <select class="filter-select" id="filter-status">
+                <option value="all">All Statuses</option>
+                <option value="completed">Completed</option>
+                <option value="processing">Processing</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+            <select class="filter-select" id="filter-time">
+                <option value="all">All Time</option>
+                <option value="month">This Month</option>
+                <option value="year">This Year</option>
+            </select>
+            <input type="text" class="search-input" id="search-orders" placeholder="Search orders...">
+        </div>
+
+        <div class="order-list" id="order-list">
+            <!-- Orders will be inserted here by JavaScript -->
+        </div>
+
+        <div class="empty-state" id="empty-state" style="display: none;">
+            <i class="fas fa-box-open"></i>
+            <h3>No Orders Found</h3>
+            <p>You haven't placed any orders yet. Start shopping to see your orders here.</p>
+            <a href="/" class="btn btn-primary">
+                <i class="fas fa-shopping-cart"></i> Start Shopping
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Sample product data (in a real app, this would come from your database)
+        const sampleProducts = {
+            "ORD12345": [
+                { name: "Premium Headphones", quantity: 1, price: "$99.99" },
+                { name: "Carrying Case", quantity: 1, price: "$19.99" }
+            ],
+            "ORD67890": [
+                { name: "Wireless Earbuds", quantity: 2, price: "$59.99" }
+            ]
+        };
+
+        // Enhanced loadOrders function with filtering
+        const loadOrders = () => {
+            const orderList = document.getElementById('order-list');
+            const emptyState = document.getElementById('empty-state');
+            let orders = JSON.parse(localStorage.getItem('orderHistory')) || [];
+            
+            // Apply filters
+            const statusFilter = document.getElementById('filter-status').value;
+            const timeFilter = document.getElementById('filter-time').value;
+            const searchQuery = document.getElementById('search-orders').value.toLowerCase();
+            
+            if (statusFilter !== 'all') {
+                orders = orders.filter(order => order.status === statusFilter);
+            }
+            
+            if (timeFilter !== 'all') {
+                const now = new Date();
+                orders = orders.filter(order => {
+                    const orderDate = new Date(order.date || now);
+                    if (timeFilter === 'month') {
+                        return orderDate.getMonth() === now.getMonth() && 
+                               orderDate.getFullYear() === now.getFullYear();
+                    } else if (timeFilter === 'year') {
+                        return orderDate.getFullYear() === now.getFullYear();
+                    }
+                    return true;
+                });
+            }
+            
+            if (searchQuery) {
+                orders = orders.filter(order => 
+                    (order.number && order.number.toLowerCase().includes(searchQuery)) ||
+                    (order.method && order.method.toLowerCase().includes(searchQuery)) ||
+                    (order.total && order.total.toLowerCase().includes(searchQuery))
+                );
+            }
+            
+            if (orders.length === 0) {
+                emptyState.style.display = 'block';
+                orderList.innerHTML = '';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            orderList.innerHTML = '';
+            
+            // Sort by date (newest first)
+            orders.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+            
+            orders.forEach((order, index) => {
+                const orderItem = document.createElement('div');
+                orderItem.className = 'order-item';
+                const products = sampleProducts[order.number] || [{ name: "Premium Headphones", quantity: 1, price: "$99.99" }];
+                
+                orderItem.innerHTML = `
+                    <div class="order-header">
+                        <div>
+                            <div class="order-title">Order #${order.number || 'N/A'}</div>
+                            <div class="order-date">${order.date || 'N/A'}</div>
+                        </div>
+                        <div class="order-status">
+                            <i class="fas fa-check-circle"></i> ${order.status || 'Completed'}
+                        </div>
+                    </div>
+                    <div class="order-details">
+                        <div class="detail-group">
+                            <div class="detail-label">Total Amount</div>
+                            <div class="detail-value">${order.total || '$0.00'}</div>
+                        </div>
+                        <div class="detail-group">
+                            <div class="detail-label">Payment Method</div>
+                            <div class="detail-value">${order.method || 'N/A'}</div>
+                        </div>
+                        <div class="detail-group">
+                            <div class="detail-label">Receipt Number</div>
+                            <div class="detail-value">${order.receipt || 'N/A'}</div>
+                        </div>
+                    </div>
+                    <div class="order-products">
+                        <div class="detail-label">Products:</div>
+                        ${products.map(p => 
+                            `<span class="product-badge">
+                                ${p.name} × ${p.quantity} (${p.price})
+                            </span>`
+                        ).join('')}
+                    </div>
+                    <div class="order-actions">
+                        <button class="btn btn-outline btn-sm" onclick="window.print()">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                        <button class="btn btn-outline btn-sm"
+                            onclick="window.location.href='order-confirmation.html?orderNumber=${order.number}&orderDate=${order.date}&orderTotal=${order.total}&paymentMethod=${order.method}&receiptNumber=${order.receipt}'">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                        <button class="btn btn-outline btn-sm" onclick="trackOrder('${order.number}')">
+                            <i class="fas fa-truck"></i> Track
+                        </button>
+                    </div>
+                `;
+                
+                orderList.appendChild(orderItem);
+            });
+        };
+        
+        // Track order function
+        function trackOrder(orderNumber) {
+            alert(`Tracking for order ${orderNumber} would be displayed here.\nIn a real app, this would connect to your shipping API.`);
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            // If no orders in history, add some sample data
+            if (!localStorage.getItem('orderHistory')) {
+                const sampleOrders = [
+                    {
+                        number: "ORD" + Math.floor(Math.random() * 100000),
+                        date: new Date().toLocaleDateString(),
+                        total: "$119.98",
+                        method: "Credit Card",
+                        receipt: "REC" + Math.floor(Math.random() * 100000),
+                        status: "completed"
+                    },
+                    {
+                        number: "ORD" + Math.floor(Math.random() * 100000),
+                        date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+                        total: "$59.99",
+                        method: "PayPal",
+                        receipt: "REC" + Math.floor(Math.random() * 100000),
+                        status: "completed"
+                    }
+                ];
+                localStorage.setItem('orderHistory', JSON.stringify(sampleOrders));
+            }
+            
+            loadOrders();
+            
+            // Add event listeners for filters
+            document.getElementById('filter-status').addEventListener('change', loadOrders);
+            document.getElementById('filter-time').addEventListener('change', loadOrders);
+            document.getElementById('search-orders').addEventListener('input', loadOrders);
+        });
+        
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registered');
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
