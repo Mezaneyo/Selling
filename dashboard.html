@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Dashboard - Msika Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .welcome-text {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* Main Content */
+        .content {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            min-height: calc(100vh - 120px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* Role Cards - Buy & Sell */
+        .role-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .role-card {
+            background: white;
+            border-radius: 25px;
+            padding: 30px 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-decoration: none;
+            display: block;
+        }
+        
+        .role-card:active {
+            transform: scale(0.98);
+        }
+        
+        .role-card.buy {
+            border-left: 8px solid #667eea;
+        }
+        
+        .role-card.sell {
+            border-left: 8px solid #f59e0b;
+        }
+        
+        .role-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+        }
+        
+        .role-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .role-card.buy .role-title {
+            color: #667eea;
+        }
+        
+        .role-card.sell .role-title {
+            color: #f59e0b;
+        }
+        
+        .role-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* Stats Section */
+        .stats-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stats-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .nav-item {
+            text-align: center;
+            flex: 1;
+            cursor: pointer;
+            padding: 8px;
+            text-decoration: none;
+            color: #666;
+            transition: color 0.2s;
+        }
+        
+        .nav-item.active {
+            color: #667eea;
+        }
+        
+        .nav-icon {
+            font-size: 24px;
+        }
+        
+        .nav-label {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        
+        /* Logout Button */
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+            z-index: 101;
+        }
+        
+        .logout-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+        }
+        
+        @media (max-width: 480px) {
+            .role-title {
+                font-size: 24px;
+            }
+            
+            .role-icon {
+                font-size: 48px;
+            }
+            
+            .role-card {
+                padding: 20px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="logout-btn" id="logoutBtn" onclick="logout()">🚪 Logout</button>
+    
+    <div class="header">
+        <div class="logo">🛒 Msika</div>
+        <div class="welcome-text" id="welcomeText">Welcome to Marketplace</div>
+    </div>
+    
+    <div class="content">
+        <div class="role-container">
+            <!-- Buy Button -->
+            <a href="buyer.html" class="role-card buy">
+                <div class="role-icon">🛍️</div>
+                <div class="role-title">I Want to BUY</div>
+                <div class="role-description">
+                    Browse products, add to cart, and shop from amazing sellers
+                </div>
+            </a>
+            
+            <!-- Sell Button -->
+            <a href="seller.html" class="role-card sell">
+                <div class="role-icon">📦</div>
+                <div class="role-title">I Want to SELL</div>
+                <div class="role-description">
+                    List your products, manage inventory, and grow your business
+                </div>
+            </a>
+        </div>
+        
+        <div class="stats-section" id="statsSection">
+            <div class="stats-title">Your Marketplace Stats</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="productsCount">-</div>
+                    <div class="stat-label">Products</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="ordersCount">-</div>
+                    <div class="stat-label">Orders</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="cartCount">-</div>
+                    <div class="stat-label">Cart Items</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalSpent">-</div>
+                    <div class="stat-label">Total Spent</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">Home</div>
+        </a>
+        <a href="products.html" class="nav-item">
+            <div class="nav-icon">🔍</div>
+            <div class="nav-label">Explore</div>
+        </a>
+        <a href="cart.html" class="nav-item">
+            <div class="nav-icon">🛒</div>
+            <div class="nav-label">Cart</div>
+        </a>
+        <a href="#" class="nav-item" onclick="logout()">
+            <div class="nav-icon">🚪</div>
+            <div class="nav-label">Logout</div>
+        </a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, query, where, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAadEukg8HmIUwJ6BC2oYYwbz0qb19iR2I",
+            authDomain: "msika-2.firebaseapp.com",
+            projectId: "msika-2",
+            storageBucket: "msika-2.firebasestorage.app",
+            messagingSenderId: "826396419263",
+            appId: "1:826396419263:web:1fb8752bafd530ba81520a"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        let currentUser = null;
+        
+        async function loadUserStats() {
+            if (!currentUser) return;
+            
+            try {
+                // Get user type from Firestore
+                const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+                const isSeller = userDoc.exists() ? userDoc.data().isSeller : false;
+                
+                // Load products count (for sellers)
+                if (isSeller) {
+                    const productsRef = collection(db, "products");
+                    const q = query(productsRef, where("sellerId", "==", currentUser.uid));
+                    const productsSnap = await getDocs(q);
+                    document.getElementById('productsCount').textContent = productsSnap.size;
+                } else {
+                    document.getElementById('productsCount').textContent = 'N/A';
+                }
+                
+                // Load cart items count
+                const cartRef = collection(db, "cart");
+                const cartQuery = query(cartRef, where("userId", "==", currentUser.uid));
+                const cartSnap = await getDocs(cartQuery);
+                const cartTotal = cartSnap.docs.reduce((sum, doc) => sum + (doc.data().quantity || 1), 0);
+                document.getElementById('cartCount').textContent = cartTotal;
+                
+                // Load orders count
+                const ordersRef = collection(db, "orders");
+                const ordersQuery = query(ordersRef, where("userId", "==", currentUser.uid));
+                const ordersSnap = await getDocs(ordersQuery);
+                document.getElementById('ordersCount').textContent = ordersSnap.size;
+                
+                // Calculate total spent
+                let totalSpent = 0;
+                ordersSnap.docs.forEach(doc => {
+                    totalSpent += doc.data().total || 0;
+                });
+                document.getElementById('totalSpent').textContent = `$${totalSpent.toFixed(2)}`;
+                
+            } catch (error) {
+                console.error("Error loading stats:", error);
+            }
+        }
+        
+        // Update welcome message
+        function updateWelcomeMessage(user) {
+            const welcomeText = document.getElementById('welcomeText');
+            if (user && user.displayName) {
+                welcomeText.textContent = `Welcome back, ${user.displayName}! 👋`;
+            } else if (user && user.email) {
+                welcomeText.textContent = `Welcome back, ${user.email.split('@')[0]}! 👋`;
+            } else {
+                welcomeText.textContent = `Welcome to Msika Marketplace! 🛒`;
+            }
+        }
+        
+        window.logout = async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        };
+        
+        // Check authentication
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            currentUser = user;
+            updateWelcomeMessage(user);
+            await loadUserStats();
+        });
+    </script>
+</body>
+</html>
