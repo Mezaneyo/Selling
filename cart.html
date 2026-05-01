@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Cart - Msika Marketplace</title>
+    <style>
+        /* Same header and bottom nav styles as products.html */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .content {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+        
+        .cart-item {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .cart-item-image {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+        
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .cart-item-price {
+            color: #667eea;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .quantity-btn {
+            background: #f0f0f0;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .remove-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .summary-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+        
+        .checkout-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .nav-item {
+            text-align: center;
+            flex: 1;
+            cursor: pointer;
+            padding: 8px;
+            text-decoration: none;
+            color: #666;
+        }
+        
+        .nav-icon {
+            font-size: 24px;
+        }
+        
+        .nav-label {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-btn" onclick="window.location.href='dashboard.html'">← Back</button>
+        <div class="logo">🛒 My Cart</div>
+    </div>
+    
+    <div class="content" id="cartContent">
+        <div class="loading">Loading cart...</div>
+    </div>
+    
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">Home</div>
+        </a>
+        <a href="products.html" class="nav-item">
+            <div class="nav-icon">🔍</div>
+            <div class="nav-label">Explore</div>
+        </a>
+        <a href="cart.html" class="nav-item" style="color: #667eea;">
+            <div class="nav-icon">🛒</div>
+            <div class="nav-label">Cart</div>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <div class="nav-icon">👤</div>
+            <div class="nav-label">Profile</div>
+        </a>
+    </div>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAadEukg8HmIUwJ6BC2oYYwbz0qb19iR2I",
+            authDomain: "msika-2.firebaseapp.com",
+            projectId: "msika-2",
+            storageBucket: "msika-2.firebasestorage.app",
+            messagingSenderId: "826396419263",
+            appId: "1:826396419263:web:1fb8752bafd530ba81520a"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        let currentUser = null;
+        let cartItems = [];
+        
+        async function loadCart() {
+            if (!currentUser) return;
+            
+            try {
+                const cartRef = collection(db, "cart");
+                const q = query(cartRef, where("userId", "==", currentUser.uid));
+                const snapshot = await getDocs(q);
+                cartItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderCart();
+            } catch (error) {
+                console.error("Error loading cart:", error);
+                document.getElementById('cartContent').innerHTML = '<div class="loading">Error loading cart. Please refresh.</div>';
+            }
+        }
+        
+        async function updateQuantity(itemId, newQuantity) {
+            if (newQuantity < 1) {
+                await removeItem(itemId);
+                return;
+            }
+            
+            const itemRef = doc(db, "cart", itemId);
+            await updateDoc(itemRef, { quantity: newQuantity });
+            await loadCart();
+        }
+        
+        async function removeItem(itemId) {
+            await deleteDoc(doc(db, "cart", itemId));
+            await loadCart();
+        }
+        
+        function renderCart() {
+            const cartContent = document.getElementById('cartContent');
+            
+            if (cartItems.length === 0) {
+                cartContent.innerHTML = `
+                    <div class="empty-cart">
+                        <div style="font-size: 64px; margin-bottom: 15px;">🛒</div>
+                        <h3>Your cart is empty</h3>
+                        <p>Start shopping to add items to your cart</p>
+                        <button class="checkout-btn" onclick="window.location.href='products.html'" style="margin-top: 20px;">Browse Products</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            let subtotal = 0;
+            
+            const itemsHtml = cartItems.map(item => {
+                const itemTotal = item.productPrice * item.quantity;
+                subtotal += itemTotal;
+                return `
+                    <div class="cart-item">
+                        <div class="cart-item-image">${item.productIcon || '📦'}</div>
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.productName}</div>
+                            <div class="cart-item-price">$${item.productPrice.toFixed(2)}</div>
+                            <div class="product-seller" style="font-size: 12px; color: #666;">by ${item.seller}</div>
+                            <div class="quantity-control">
+                                <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
+                                <span>${item.quantity}</span>
+                                <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
+                                <button class="remove-btn" onclick="removeItem('${item.id}')">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            const tax = subtotal * 0.08;
+            const total = subtotal + tax;
+            
+            cartContent.innerHTML = `
+                ${itemsHtml}
+                <div class="summary-card">
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span>$${subtotal.toFixed(2)}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax (8%):</span>
+                        <span>$${tax.toFixed(2)}</span>
+                    </div>
+                    <div class="summary-row" style="font-weight: 700; font-size: 18px; border-top: 1px solid #e0e0e0; margin-top: 10px; padding-top: 10px;">
+                        <span>Total:</span>
+                        <span>$${total.toFixed(2)}</span>
+                    </div>
+                    <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+                </div>
+            `;
+        }
+        
+        window.updateQuantity = updateQuantity;
+        window.removeItem = removeItem;
+        
+        window.checkout = async () => {
+            if (cartItems.length === 0) return;
+            
+            const total = cartItems.reduce((sum, item) => sum + (item.productPrice * item.quantity), 0);
+            alert(`Order placed! Total: $${(total + total * 0.08).toFixed(2)}\n\nThank you for shopping at Msika!`);
+            
+            // Clear cart
+            for (const item of cartItems) {
+                await deleteDoc(doc(db, "cart", item.id));
+            }
+            await loadCart();
+        };
+        
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            currentUser = user;
+            loadCart();
+        });
+    </script>
+</body>
+</html>
