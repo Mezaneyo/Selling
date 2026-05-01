@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Profile - Msika Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        
+        .profile-avatar {
+            font-size: 80px;
+            margin-bottom: 10px;
+        }
+        
+        .profile-name {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .profile-email {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .logout-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .nav-item {
+            text-align: center;
+            flex: 1;
+            cursor: pointer;
+            padding: 8px;
+            text-decoration: none;
+            color: #666;
+        }
+        
+        .nav-icon {
+            font-size: 24px;
+        }
+        
+        .nav-label {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-btn" onclick="window.location.href='dashboard.html'">← Back</button>
+        <div class="profile-avatar" id="avatar">👤</div>
+        <div class="profile-name" id="userName">Loading...</div>
+        <div class="profile-email" id="userEmail">Loading...</div>
+    </div>
+    
+    <div class="content">
+        <div class="card">
+            <h3>Account Settings</h3>
+            <div class="menu-item" onclick="alert('Edit Profile - Coming Soon')">
+                <span>✏️ Edit Profile</span>
+                <span>→</span>
+            </div>
+            <div class="menu-item" onclick="alert('Order History - Coming Soon')">
+                <span>📦 Order History</span>
+                <span>→</span>
+            </div>
+            <div class="menu-item" onclick="alert('Payment Methods - Coming Soon')">
+                <span>💳 Payment Methods</span>
+                <span>→</span>
+            </div>
+            <div class="menu-item" onclick="alert('Address Book - Coming Soon')">
+                <span>📍 Address Book</span>
+                <span>→</span>
+            </div>
+        </div>
+        
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+    
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">Home</div>
+        </a>
+        <a href="products.html" class="nav-item">
+            <div class="nav-icon">🔍</div>
+            <div class="nav-label">Explore</div>
+        </a>
+        <a href="cart.html" class="nav-item">
+            <div class="nav-icon">🛒</div>
+            <div class="nav-label">Cart</div>
+        </a>
+        <a href="profile.html" class="nav-item" style="color: #667eea;">
+            <div class="nav-icon">👤</div>
+            <div class="nav-label">Profile</div>
+        </a>
+    </div>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAadEukg8HmIUwJ6BC2oYYwbz0qb19iR2I",
+            authDomain: "msika-2.firebaseapp.com",
+            projectId: "msika-2",
+            storageBucket: "msika-2.firebasestorage.app",
+            messagingSenderId: "826396419263",
+            appId: "1:826396419263:web:1fb8752bafd530ba81520a"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = 'signup.html';
+                return;
+            }
+            
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            const userData = userDoc.data();
+            
+            document.getElementById('userName').textContent = userData?.fullName || user.displayName || 'User';
+            document.getElementById('userEmail').textContent = user.email;
+        });
+        
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'signup.html';
+        });
+    </script>
+</body>
+</html>
