@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Online marketplace for buying and selling products">
+  <title>Marketplace - Buy & Sell Products</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-hover: #3a56d4;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --dark-light: #343a40;
+      --success: #4cc9f0;
+      --warning: #f72585;
+      --border: #e2e8f0;
+      --text-muted: #64748b;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 16px;
+      --transition: all 0.2s ease;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f5f7fa;
+      color: var(--dark);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    header {
+      background-color: white;
+      box-shadow: var(--shadow-sm);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .nav-brand {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-brand svg {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    
+    .nav-link {
+      color: var(--dark);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      padding: 0.5rem 0;
+      position: relative;
+    }
+    
+    .nav-link:hover {
+      color: var(--primary);
+    }
+    
+    .cart-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: var(--warning);
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+    
+    main {
+      flex: 1;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+    
+    .search-container {
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 0.8rem 1rem 0.8rem 3rem;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      font-size: 1rem;
+      transition: var(--transition);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 1rem center;
+      background-size: 20px;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+    
+    .filter-container {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: 0.5rem 1.2rem;
+      border-radius: 50px;
+      background-color: white;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    
+    .filter-btn:hover {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .filter-btn.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .product-card {
+      background-color: white;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .product-image-container {
+      position: relative;
+      overflow: hidden;
+      background: #f0f0f0;
+      height: 200px;
+    }
+    
+    .product-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    
+    .product-card:hover .product-image {
+      transform: scale(1.03);
+    }
+    
+    .product-badge {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background-color: var(--warning);
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .product-body {
+      padding: 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .product-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--dark-light);
+    }
+    
+    .product-seller {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .product-category {
+      display: inline-block;
+      background-color: #e2e8f0;
+      color: #4a5568;
+      padding: 0.2rem 0.6rem;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      margin-bottom: 0.5rem;
+      width: fit-content;
+    }
+    
+    .product-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .product-price {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+    
+    .add-to-cart {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 500;
+      transition: var(--transition);
+      font-size: 0.8rem;
+    }
+    
+    .add-to-cart:hover {
+      background-color: var(--primary-hover);
+    }
+    
+    .message-seller {
+      background-color: #10b981;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 500;
+      transition: var(--transition);
+      font-size: 0.8rem;
+    }
+    
+    .message-seller:hover {
+      background-color: #059669;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-muted);
+      grid-column: 1 / -1;
+    }
+    
+    footer {
+      background-color: var(--dark);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .footer-link {
+      color: white;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    
+    .footer-link:hover {
+      color: var(--accent);
+    }
+    
+    .copyright {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+    }
+    
+    .loading {
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
+      grid-column: 1 / -1;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(67, 97, 238, 0.2);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .toast-notification {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background-color: var(--dark);
+      color: white;
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .toast-notification.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    
+    /* Chat Modal */
+    .chat-modal {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 350px;
+      height: 500px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      z-index: 1000;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slideUp 0.3s ease;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .chat-modal-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .chat-modal-header h3 {
+      font-size: 16px;
+    }
+    
+    .close-chat {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #f8f9fa;
+    }
+    
+    .chat-message {
+      max-width: 80%;
+      padding: 10px 12px;
+      border-radius: 18px;
+      font-size: 13px;
+    }
+    
+    .chat-message.sent {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    
+    .chat-message.received {
+      background: white;
+      color: #333;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    
+    .chat-message-time {
+      font-size: 10px;
+      opacity: 0.7;
+      margin-top: 4px;
+      text-align: right;
+    }
+    
+    .chat-input-container {
+      display: flex;
+      padding: 12px;
+      background: white;
+      border-top: 1px solid #e0e0e0;
+      gap: 10px;
+    }
+    
+    .chat-input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #e0e0e0;
+      border-radius: 25px;
+      font-size: 13px;
+      resize: none;
+      font-family: inherit;
+    }
+    
+    .chat-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .chat-send {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .chat-toggle-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+    
+    .chat-toggle-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .unread-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #dc2626;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 1rem;
+      }
+      
+      header {
+        padding: 1rem;
+      }
+      
+      .nav-links {
+        gap: 1rem;
+      }
+      
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      }
+      
+      .chat-modal {
+        width: 100%;
+        height: 100%;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .nav-brand {
+        font-size: 1.1rem;
+      }
+      
+      .nav-link {
+        font-size: 0.9rem;
+      }
+      
+      .filter-container {
+        gap: 0.5rem;
+      }
+      
+      .filter-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-brand">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+        <path d="M5.507 4.048A3 3 0 017.785 3h8.43a3 3 0 012.278 1.048l1.722 2.008A4.533 4.533 0 0019.5 6h-15c-.243 0-.482.02-.715.056l1.722-2.008z" />
+        <path fill-rule="evenodd" d="M1.5 10.5a3 3 0 013-3h15a3 3 0 110 6h-15a3 3 0 01-3-3zm15 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm2.25.75a.75.75 0 100-1.5.75.75 0 000 1.5zM4.5 15a3 3 0 100 6h15a3 3 0 100-6h-15zm11.25 3.75a.75.75 0 100-1.5.75.75 0 000 1.5zM19.5 18a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" clip-rule="evenodd" />
+      </svg>
+      Msika
+    </div>
+    <div class="nav-links">
+      <a href="seller.html" class="nav-link">Sell</a>
+      <a href="cart.html" class="nav-link cart-btn">
+        🛒 <span class="cart-count" id="cart-count">0</span>
+      </a>
+      <a href="#" class="nav-link" onclick="logout()">Logout</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="search-container">
+        <input type="text" class="search-input" id="search-input" placeholder="Search products..." aria-label="Search products">
+      </div>
+
+      <div class="filter-container">
+        <button class="filter-btn active" data-category="all">All Products</button>
+        <button class="filter-btn" data-category="Electronics">Electronics</button>
+        <button class="filter-btn" data-category="Fashion">Fashion</button>
+        <button class="filter-btn" data-category="Home">Home & Garden</button>
+        <button class="filter-btn" data-category="Sports">Sports</button>
+        <button class="filter-btn" data-category="Books">Books</button>
+      </div>
+
+      <div class="products-grid" id="products-container">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="#" class="footer-link">About Us</a>
+      <a href="#" class="footer-link">Contact</a>
+      <a href="#" class="footer-link">Terms</a>
+      <a href="#" class="footer-link">Privacy</a>
+    </div>
+    <p class="copyright">© 2025 Msika Marketplace. All rights reserved.</p>
+  </footer>
+
+  <!-- Chat Modal -->
+  <div class="chat-modal" id="chatModal">
+    <div class="chat-modal-header">
+      <h3 id="chatWithName">Loading...</h3>
+      <button class="close-chat" id="closeChatBtn">✕</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div style="text-align: center; padding: 20px; color: #999;">Loading messages...</div>
+    </div>
+    <div class="chat-input-container">
+      <textarea class="chat-input" id="chatInput" placeholder="Type a message..." rows="1"></textarea>
+      <button class="chat-send" id="sendChatBtn">📤</button>
+    </div>
+  </div>
+
+  <button class="chat-toggle-btn" id="chatToggleBtn">
+    💬
+    <span class="unread-badge" id="unreadBadge" style="display: none;">0</span>
+  </button>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+    import { getFirestore, collection, getDocs, addDoc, query, where, deleteDoc, doc, getDoc, updateDoc, orderBy, onSnapshot, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyAadEukg8HmIUwJ6BC2oYYwbz0qb19iR2I",
+      authDomain: "msika-2.firebaseapp.com",
+      projectId: "msika-2",
+      storageBucket: "msika-2.firebasestorage.app",
+      messagingSenderId: "826396419263",
+      appId: "1:826396419263:web:1fb8752bafd530ba81520a"
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    
+    let currentUser = null;
+    let allProducts = [];
+    let currentChatId = null;
+    let currentChatSellerId = null;
+    let currentChatSellerName = null;
+    let unsubscribeMessages = null;
+    
+    // DOM Elements
+    const searchInput = document.getElementById('search-input');
+    const productsContainer = document.getElementById('products-container');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const cartCountEl = document.getElementById('cart-count');
+    
+    // Chat Elements
+    const chatModal = document.getElementById('chatModal');
+    const chatToggleBtn = document.getElementById('chatToggleBtn');
+    const closeChatBtn = document.getElementById('closeChatBtn');
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendChatBtn = document.getElementById('sendChatBtn');
+    const chatWithName = document.getElementById('chatWithName');
+    const unreadBadge = document.getElementById('unreadBadge');
+    
+    let isChatOpen = false;
+    let unreadCount = 0;
+    
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast-notification';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => document.body.removeChild(toast), 300);
+      }, 3000);
+    }
+    
+    async function updateCartCount() {
+      if (!currentUser) return;
+      try {
+        const cartRef = collection(db, "cart");
+        const q = query(cartRef, where("userId", "==", currentUser.uid));
+        const snapshot = await getDocs(q);
+        const total = snapshot.docs.reduce((sum, doc) => sum + (doc.data().quantity || 1), 0);
+        if (cartCountEl) cartCountEl.textContent = total;
+      } catch (error) {
+        console.error("Error getting cart count:", error);
+      }
+    }
+    
+    async function loadProducts() {
+      try {
+        const productsRef = collection(db, "products");
+        const snapshot = await getDocs(productsRef);
+        
+        if (snapshot.empty) {
+          productsContainer.innerHTML = '<div class="empty-state">No products available yet. Check back later!</div>';
+          allProducts = [];
+          return;
+        }
+        
+        allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        filterProducts();
+      } catch (error) {
+        console.error("Error loading products:", error);
+        productsContainer.innerHTML = '<div class="empty-state">Error loading products. Please refresh.</div>';
+      }
+    }
+    
+    function filterProducts() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const activeFilter = document.querySelector('.filter-btn.active').dataset.category;
+      
+      let filtered = allProducts.filter(product => {
+        const matchesSearch = (product.name || '').toLowerCase().includes(searchTerm) || 
+                              (product.sellerName || '').toLowerCase().includes(searchTerm);
+        const matchesFilter = activeFilter === 'all' || (product.category || '').toLowerCase() === activeFilter.toLowerCase();
+        return matchesSearch && matchesFilter;
+      });
+      
+      renderProducts(filtered);
+    }
+    
+    function renderProducts(products) {
+      if (!products || products.length === 0) {
+        productsContainer.innerHTML = `
+          <div class="empty-state">
+            <div style="font-size: 48px; margin-bottom: 10px;">🔍</div>
+            <h3>No products found</h3>
+            <p>Try adjusting your search or filter criteria</p>
+          </div>
+        `;
+        return;
+      }
+      
+      productsContainer.innerHTML = products.map(product => `
+        <div class="product-card" data-id="${product.id}">
+          <div class="product-image-container">
+            <img src="${product.imageUrl || 'https://placehold.co/400x300?text=No+Image'}" 
+                 class="product-image" 
+                 alt="${product.name}" 
+                 loading="lazy"
+                 onerror="this.src='https://placehold.co/400x300?text=Image+Not+Found'">
+            ${product.featured ? '<span class="product-badge">Featured</span>' : ''}
+          </div>
+          <div class="product-body">
+            <span class="product-category">${product.category || 'Other'}</span>
+            <h3 class="product-title">${escapeHtml(product.name)}</h3>
+            <p class="product-seller">by ${escapeHtml(product.sellerName || 'Unknown Seller')}</p>
+            <div class="product-footer">
+              <div class="product-price">$${(product.price || 0).toFixed(2)}</div>
+            </div>
+            <div class="action-buttons">
+              <button class="add-to-cart" onclick="addToCart('${product.id}')">🛒 Add to Cart</button>
+              <button class="message-seller" onclick="openChatWithSeller('${product.id}', '${product.sellerId}', '${escapeHtml(product.sellerName || 'Seller')}', '${escapeHtml(product.name)}')">💬 Message</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    window.addToCart = async (productId) => {
+      if (!currentUser) {
+        showToast('Please login first');
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      const product = allProducts.find(p => p.id == productId);
+      if (!product) {
+        showToast('Product not found');
+        return;
+      }
+      
+      try {
+        const cartRef = collection(db, "cart");
+        const q = query(cartRef, where("userId", "==", currentUser.uid), where("productId", "==", productId));
+        const existing = await getDocs(q);
+        
+        if (!existing.empty) {
+          showToast(`${product.name} is already in your cart`);
+          return;
+        }
+        
+        await addDoc(collection(db, "cart"), {
+          userId: currentUser.uid,
+          productId: product.id,
+          productName: product.name,
+          productPrice: product.price,
+          productImage: product.imageUrl,
+          sellerName: product.sellerName || 'Seller',
+          quantity: 1,
+          addedAt: new Date()
+        });
+        
+        showToast(`${product.name} added to cart! 🛒`);
+        await updateCartCount();
+        
+        const btn = document.querySelector(`.product-card[data-id="${productId}"] .add-to-cart`);
+        if (btn) {
+          btn.textContent = '✓ Added!';
+          btn.style.backgroundColor = '#10b981';
+          setTimeout(() => {
+            btn.textContent = '🛒 Add to Cart';
+            btn.style.backgroundColor = '#4361ee';
+          }, 1500);
+        }
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+        showToast('Failed to add to cart. Please try again.');
+      }
+    };
+    
+    // Chat Functions
+    window.openChatWithSeller = async (productId, sellerId, sellerName, productName) => {
+      if (!currentUser) {
+        showToast('Please login first');
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      if (currentUser.uid === sellerId) {
+        showToast('You cannot message yourself');
+        return;
+      }
+      
+      // Check if chat already exists
+      const chatsRef = collection(db, "chats");
+      const q = query(chatsRef, 
+        where("participants", "array-contains", currentUser.uid),
+        where("productId", "==", productId)
+      );
+      const existing = await getDocs(q);
+      
+      let chatId;
+      if (!existing.empty) {
+        chatId = existing.docs[0].id;
+      } else {
+        // Create new chat
+        const newChat = await addDoc(collection(db, "chats"), {
+          participants: [currentUser.uid, sellerId],
+          productId: productId,
+          productName: productName,
+          createdAt: new Date(),
+          lastMessage: ""
+        });
+        chatId = newChat.id;
+      }
+      
+      currentChatId = chatId;
+      currentChatSellerId = sellerId;
+      currentChatSellerName = sellerName;
+      
+      chatWithName.textContent = sellerName;
+      
+      // Load messages
+      if (unsubscribeMessages) {
+        unsubscribeMessages();
+      }
+      
+      const messagesRef = collection(db, "chats", chatId, "messages");
+      const messagesQuery = query(messagesRef, orderBy("timestamp", "asc"));
+      
+      unsubscribeMessages = onSnapshot(messagesQuery, (snapshot) => {
+        chatMessages.innerHTML = '';
+        let hasUnread = false;
+        
+        snapshot.forEach(doc => {
+          const msg = doc.data();
+          const isSent = msg.senderId === currentUser.uid;
+          
+          // Mark unread messages
+          if (!isSent && !msg.read) {
+            hasUnread = true;
+            // Mark as read
+            updateDoc(doc.ref, { read: true });
+          }
+          
+          const messageDiv = document.createElement('div');
+          messageDiv.className = `chat-message ${isSent ? 'sent' : 'received'}`;
+          messageDiv.innerHTML = `
+            ${escapeHtml(msg.text)}
+            <div class="chat-message-time">${formatChatTime(msg.timestamp)}</div>
+          `;
+          chatMessages.appendChild(messageDiv);
+        });
+        
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Update unread badge
+        if (hasUnread) {
+          unreadCount++;
+          updateUnreadBadge();
+        }
+      });
+      
+      chatModal.style.display = 'flex';
+      isChatOpen = true;
+      chatInput.focus();
+    };
+    
+    async function sendChatMessage() {
+      const text = chatInput.value.trim();
+      if (!text || !currentChatId) return;
+      
+      await addDoc(collection(db, "chats", currentChatId, "messages"), {
+        senderId: currentUser.uid,
+        text: text,
+        timestamp: new Date(),
+        read: false
+      });
+      
+      // Update last message in chat document
+      await updateDoc(doc(db, "chats", currentChatId), {
+        lastMessage: text,
+        lastMessageTime: new Date()
+      });
+      
+      chatInput.value = '';
+      chatInput.style.height = 'auto';
+    }
+    
+    function formatChatTime(timestamp) {
+      if (!timestamp) return '';
+      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    
+    async function updateUnreadBadge() {
+      if (!currentUser) return;
+      
+      // Count unread messages across all chats
+      const chatsRef = collection(db, "chats");
+      const q = query(chatsRef, where("participants", "array-contains", currentUser.uid));
+      const chats = await getDocs(q);
+      
+      let totalUnread = 0;
+      for (const chatDoc of chats.docs) {
+        const messagesRef = collection(db, "chats", chatDoc.id, "messages");
+        const unreadQuery = query(messagesRef, where("read", "==", false), where("senderId", "!=", currentUser.uid));
+        const unread = await getDocs(unreadQuery);
+        totalUnread += unread.size;
+      }
+      
+      if (totalUnread > 0) {
+        unreadBadge.style.display = 'flex';
+        unreadBadge.textContent = totalUnread > 9 ? '9+' : totalUnread;
+      } else {
+        unreadBadge.style.display = 'none';
+      }
+    }
+    
+    chatToggleBtn.addEventListener('click', () => {
+      if (chatModal.style.display === 'flex') {
+        chatModal.style.display = 'none';
+        isChatOpen = false;
+        if (unsubscribeMessages) {
+          unsubscribeMessages();
+          unsubscribeMessages = null;
+        }
+      } else {
+        chatModal.style.display = 'flex';
+        isChatOpen = true;
+      }
+    });
+    
+    closeChatBtn.addEventListener('click', () => {
+      chatModal.style.display = 'none';
+      isChatOpen = false;
+      if (unsubscribeMessages) {
+        unsubscribeMessages();
+        unsubscribeMessages = null;
+      }
+    });
+    
+    sendChatBtn.addEventListener('click', sendChatMessage);
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendChatMessage();
+      }
+    });
+    
+    window.logout = async () => {
+      await signOut(auth);
+      window.location.href = 'login.html';
+    };
+    
+    searchInput.addEventListener('input', debounce(filterProducts, 300));
+    
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        filterProducts();
+      });
+    });
+    
+    function debounce(func, delay) {
+      let timeoutId;
+      return function() {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func.apply(this, arguments), delay);
+      };
+    }
+    
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+      currentUser = user;
+      
+      await loadProducts();
+      await updateCartCount();
+      await updateUnreadBadge();
+      
+      // Periodically check for unread messages
+      setInterval(async () => {
+        if (!isChatOpen) {
+          await updateUnreadBadge();
+        }
+      }, 5000);
+    });
+  </script>
+</body>
+</html>

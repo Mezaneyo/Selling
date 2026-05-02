@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Messages - Msika Marketplace</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f7fa;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .back-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      font-size: 20px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .header h1 {
+      font-size: 20px;
+      flex: 1;
+    }
+    
+    /* Chat Container */
+    .chat-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    
+    /* Conversations List */
+    .conversations-list {
+      width: 320px;
+      background: white;
+      border-right: 1px solid #e0e0e0;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    
+    .conversation-item {
+      padding: 15px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      gap: 12px;
+    }
+    
+    .conversation-item:hover {
+      background: #f8f9fa;
+    }
+    
+    .conversation-item.active {
+      background: #e3f2fd;
+      border-left: 3px solid #667eea;
+    }
+    
+    .conversation-avatar {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    
+    .conversation-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .conversation-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #333;
+    }
+    
+    .conversation-last-message {
+      font-size: 13px;
+      color: #666;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .conversation-time {
+      font-size: 11px;
+      color: #999;
+    }
+    
+    .unread-badge {
+      background: #667eea;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Chat Area */
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #f5f7fa;
+      overflow: hidden;
+    }
+    
+    .chat-header {
+      background: white;
+      padding: 15px 20px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .chat-avatar {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    
+    .chat-with-name {
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .chat-product {
+      font-size: 12px;
+      color: #667eea;
+    }
+    
+    .messages-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .message {
+      max-width: 70%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      position: relative;
+    }
+    
+    .message.sent {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    
+    .message.received {
+      background: white;
+      color: #333;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    
+    .message-time {
+      font-size: 10px;
+      opacity: 0.7;
+      margin-top: 4px;
+      text-align: right;
+    }
+    
+    .message-input-container {
+      background: white;
+      padding: 15px 20px;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      gap: 12px;
+    }
+    
+    .message-input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 25px;
+      font-size: 14px;
+      resize: none;
+      font-family: inherit;
+    }
+    
+    .message-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .send-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+    
+    .send-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .empty-state-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+    
+    /* New Chat Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      max-width: 400px;
+      width: 90%;
+    }
+    
+    .modal-content h3 {
+      margin-bottom: 16px;
+    }
+    
+    .modal-content select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .modal-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      border: none;
+    }
+    
+    .modal-btn-primary {
+      background: #667eea;
+      color: white;
+    }
+    
+    .new-chat-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 200;
+    }
+    
+    @media (max-width: 768px) {
+      .conversations-list {
+        width: 100%;
+        position: absolute;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+      }
+      
+      .conversations-list.open {
+        transform: translateX(0);
+      }
+      
+      .message {
+        max-width: 85%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">←</button>
+    <h1>Messages</h1>
+  </div>
+  
+  <div class="chat-container">
+    <!-- Conversations List -->
+    <div class="conversations-list" id="conversationsList">
+      <div style="padding: 20px; text-align: center; color: #999;">
+        Loading conversations...
+      </div>
+    </div>
+    
+    <!-- Chat Area -->
+    <div class="chat-area" id="chatArea">
+      <div class="empty-state">
+        <div class="empty-state-icon">💬</div>
+        <h3>Select a conversation</h3>
+        <p>Choose a chat from the left to start messaging</p>
+      </div>
+    </div>
+  </div>
+  
+  <button class="new-chat-btn" id="newChatBtn">+</button>
+  
+  <!-- New Chat Modal -->
+  <div class="modal" id="newChatModal">
+    <div class="modal-content">
+      <h3>Start New Conversation</h3>
+      <p>Select a product to inquire about:</p>
+      <select id="productSelect"></select>
+      <div class="modal-buttons">
+        <button class="modal-btn" id="cancelModalBtn">Cancel</button>
+        <button class="modal-btn modal-btn-primary" id="startChatBtn">Start Chat</button>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs, addDoc, orderBy, onSnapshot, doc, updateDoc, serverTimestamp, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyAadEukg8HmIUwJ6BC2oYYwbz0qb19iR2I",
+      authDomain: "msika-2.firebaseapp.com",
+      projectId: "msika-2",
+      storageBucket: "msika-2.firebasestorage.app",
+      messagingSenderId: "826396419263",
+      appId: "1:826396419263:web:1fb8752bafd530ba81520a"
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    
+    let currentUser = null;
+    let currentChatId = null;
+    let unsubscribeMessages = null;
+    
+    // Load conversations
+    async function loadConversations() {
+      if (!currentUser) return;
+      
+      const chatsRef = collection(db, "chats");
+      const q = query(chatsRef, where("participants", "array-contains", currentUser.uid));
+      const snapshot = await getDocs(q);
+      
+      const conversationsList = document.getElementById('conversationsList');
+      
+      if (snapshot.empty) {
+        conversationsList.innerHTML = `
+          <div style="padding: 20px; text-align: center; color: #999;">
+            💬 No conversations yet<br>
+            Tap the + button to start chatting
+          </div>
+        `;
+        return;
+      }
+      
+      const conversations = [];
+      for (const doc of snapshot.docs) {
+        const chat = { id: doc.id, ...doc.data() };
+        // Get other participant's info
+        const otherUid = chat.participants.find(p => p !== currentUser.uid);
+        const userDoc = await getDoc(doc(db, "users", otherUid));
+        const userName = userDoc.exists() ? userDoc.data().fullName : "User";
+        const productName = chat.productName || "Product";
+        
+        conversations.push({
+          ...chat,
+          otherUserName: userName,
+          otherUid: otherUid,
+          productName: productName,
+          displayName: `${userName} - ${productName}`
+        });
+      }
+      
+      conversationsList.innerHTML = conversations.map(chat => `
+        <div class="conversation-item" onclick="openChat('${chat.id}', '${chat.otherUserName}', '${chat.productName}')">
+          <div class="conversation-avatar">👤</div>
+          <div class="conversation-info">
+            <div class="conversation-name">${escapeHtml(chat.otherUserName)}</div>
+            <div class="conversation-last-message">${escapeHtml(chat.lastMessage || 'No messages yet')}</div>
+          </div>
+          <div class="conversation-time">${formatTime(chat.lastMessageTime)}</div>
+        </div>
+      `).join('');
+    }
+    
+    window.openChat = async (chatId, otherUserName, productName) => {
+      if (unsubscribeMessages) {
+        unsubscribeMessages();
+      }
+      
+      currentChatId = chatId;
+      
+      const chatArea = document.getElementById('chatArea');
+      chatArea.innerHTML = `
+        <div class="chat-header">
+          <div class="chat-avatar">👤</div>
+          <div>
+            <div class="chat-with-name">${escapeHtml(otherUserName)}</div>
+            <div class="chat-product">Re: ${escapeHtml(productName)}</div>
+          </div>
+        </div>
+        <div class="messages-container" id="messagesContainer"></div>
+        <div class="message-input-container">
+          <textarea class="message-input" id="messageInput" placeholder="Type a message..." rows="1"></textarea>
+          <button class="send-btn" id="sendMsgBtn">📤</button>
+        </div>
+      `;
+      
+      // Load messages in real-time
+      const messagesRef = collection(db, "chats", chatId, "messages");
+      const q = query(messagesRef, orderBy("timestamp", "asc"));
+      
+      unsubscribeMessages = onSnapshot(q, (snapshot) => {
+        const container = document.getElementById('messagesContainer');
+        if (!container) return;
+        
+        const messages = [];
+        snapshot.forEach(doc => {
+          messages.push({ id: doc.id, ...doc.data() });
+        });
+        
+        container.innerHTML = messages.map(msg => `
+          <div class="message ${msg.senderId === currentUser.uid ? 'sent' : 'received'}">
+            ${escapeHtml(msg.text)}
+            <div class="message-time">${formatTime(msg.timestamp)}</div>
+          </div>
+        `).join('');
+        
+        container.scrollTop = container.scrollHeight;
+      });
+      
+      // Send message handler
+      setTimeout(() => {
+        const sendBtn = document.getElementById('sendMsgBtn');
+        const messageInput = document.getElementById('messageInput');
+        
+        const sendMessage = async () => {
+          const text = messageInput.value.trim();
+          if (!text) return;
+          
+          await addDoc(collection(db, "chats", chatId, "messages"), {
+            senderId: currentUser.uid,
+            text: text,
+            timestamp: new Date()
+          });
+          
+          // Update last message in chat document
+          await updateDoc(doc(db, "chats", chatId), {
+            lastMessage: text,
+            lastMessageTime: new Date()
+          });
+          
+          messageInput.value = '';
+          messageInput.style.height = 'auto';
+        };
+        
+        sendBtn.onclick = sendMessage;
+        messageInput.onkeypress = (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+          }
+        };
+      }, 100);
+    };
+    
+    // Start new chat
+    async function startNewChat() {
+      const products = await loadUserProducts();
+      
+      const modal = document.getElementById('newChatModal');
+      const productSelect = document.getElementById('productSelect');
+      
+      productSelect.innerHTML = products.map(p => `
+        <option value='${JSON.stringify({ id: p.id, name: p.name, sellerId: p.sellerId })}'>
+          ${p.name} - by ${p.sellerName}
+        </option>
+      `).join('');
+      
+      modal.style.display = 'flex';
+      
+      document.getElementById('startChatBtn').onclick = async () => {
+        const selected = JSON.parse(productSelect.value);
+        
+        // Check if chat already exists
+        const chatsRef = collection(db, "chats");
+        const q = query(chatsRef, 
+          where("participants", "array-contains", currentUser.uid),
+          where("productId", "==", selected.id)
+        );
+        const existing = await getDocs(q);
+        
+        if (!existing.empty) {
+          alert('You already have a conversation about this product!');
+          modal.style.display = 'none';
+          openChat(existing.docs[0].id, selected.sellerName, selected.name);
+          return;
+        }
+        
+        // Create new chat
+        const newChat = await addDoc(collection(db, "chats"), {
+          participants: [currentUser.uid, selected.sellerId],
+          productId: selected.id,
+          productName: selected.name,
+          createdAt: new Date(),
+          lastMessage: "New conversation started"
+        });
+        
+        modal.style.display = 'none';
+        loadConversations();
+        openChat(newChat.id, selected.sellerName, selected.name);
+      };
+    }
+    
+    async function loadUserProducts() {
+      const productsRef = collection(db, "products");
+      const snapshot = await getDocs(productsRef);
+      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    }
+    
+    function formatTime(timestamp) {
+      if (!timestamp) return '';
+      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+      currentUser = user;
+      await loadConversations();
+    });
+    
+    document.getElementById('newChatBtn').onclick = startNewChat;
+    document.getElementById('cancelModalBtn').onclick = () => {
+      document.getElementById('newChatModal').style.display = 'none';
+    };
+  </script>
+</body>
+</html>
