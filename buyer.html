@@ -154,7 +154,7 @@
     .edit-message, .delete-message { background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 5px; font-size: 10px; }
     .edit-message { color: #667eea; }
     .delete-message { color: #dc2626; }
-    .typing-indicator { padding: 8px 15px; font-size: 12px; color: #666; font-style: italic; display: flex; align-items: center; gap: 5px; }
+    .typing-indicator { padding: 8px 15px; font-size: 12px; color: #666; font-style: italic; display: flex; align-items: center; gap: 5px; background: #f8f9fa; border-radius: 20px; margin: 0 15px; }
     .typing-dots { display: flex; gap: 3px; }
     .typing-dots span { width: 5px; height: 5px; background: #667eea; border-radius: 50%; animation: typing 1.4s infinite; }
     .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
@@ -162,11 +162,10 @@
     @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-5px); opacity: 1; } }
     .chat-input-container { display: flex; padding: 12px; background: white; border-top: 1px solid #e0e0e0; gap: 8px; align-items: center; flex-wrap: wrap; }
     .chat-input { flex: 1; padding: 10px; border: 1px solid #e0e0e0; border-radius: 25px; font-size: 13px; resize: none; font-family: inherit; }
-    .attach-image-btn, .attach-audio-btn { background: #f0f0f0; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+    .attach-image-btn, .attach-audio-btn { background: #f0f0f0; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
     .chat-send { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .chat-toggle-btn { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 50%; color: white; font-size: 24px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; display: flex; align-items: center; justify-content: center; }
     
-    /* Image Viewer */
     .image-viewer { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 3000; align-items: center; justify-content: center; flex-direction: column; }
     .image-viewer img { max-width: 90%; max-height: 80%; border-radius: 10px; }
     .close-viewer { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; }
@@ -252,10 +251,7 @@
   <button class="chat-toggle-btn" id="chatToggleBtn">💬</button>
 
   <!-- Image Viewer -->
-  <div class="image-viewer" id="imageViewer" onclick="this.style.display='none'">
-    <span class="close-viewer" onclick="this.parentElement.style.display='none'">×</span>
-    <img id="viewerImage" src="">
-  </div>
+  <div class="image-viewer" id="imageViewer" onclick="this.style.display='none'"><span class="close-viewer" onclick="this.parentElement.style.display='none'">×</span><img id="viewerImage" src=""></div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
@@ -288,6 +284,10 @@
     let audioChunks = [];
     let isRecording = false;
     let userNameCache = {};
+    
+    // Cloudinary Configuration
+    const CLOUDINARY_CLOUD_NAME = "dqmfmxgdy";
+    const CLOUDINARY_UPLOAD_PRESET = "msika_audio";
     
     // DOM Elements
     const searchInput = document.getElementById('search-input');
@@ -346,23 +346,37 @@
       } catch (error) { throw error; }
     }
     
+    async function uploadAudioToCloudinary(audioBlob) {
+      const formData = new FormData();
+      formData.append('file', audioBlob);
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+      formData.append('resource_type', 'video');
+      try {
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, { method: 'POST', body: formData });
+        const data = await response.json();
+        if (data.secure_url) return data.secure_url;
+        throw new Error(data.error?.message || 'Upload failed');
+      } catch (error) { throw error; }
+    }
+    
     // ========== VOICE RECORDING FUNCTIONS ==========
     async function startRecording() {
       audioChunks = [];
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = (event) => { audioChunks.push(event.data); };
+        mediaRecorder.ondataavailable = (event) => { if (event.data.size > 0) audioChunks.push(event.data); };
         mediaRecorder.onstop = async () => {
           const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-          const audioUrl = await uploadToImgBB(audioBlob);
-          if (audioUrl && currentChatId) {
-            await addDoc(collection(db, "chats", currentChatId, "messages"), {
-              senderId: currentUser.uid, text: '🎤 Voice note', audioUrl: audioUrl, timestamp: new Date(), read: false, edited: false, deleted: false
-            });
-            await updateDoc(doc(db, "chats", currentChatId), { lastMessage: '🎤 Voice note', lastMessageTime: new Date() });
-            showToast('Voice note sent!');
-          }
+          showToast('Uploading voice note...');
+          try {
+            const audioUrl = await uploadAudioToCloudinary(audioBlob);
+            if (audioUrl && currentChatId) {
+              await addDoc(collection(db, "chats", currentChatId, "messages"), { senderId: currentUser.uid, text: '🎤 Voice note', audioUrl: audioUrl, timestamp: new Date(), read: false, edited: false, deleted: false });
+              await updateDoc(doc(db, "chats", currentChatId), { lastMessage: '🎤 Voice note', lastMessageTime: new Date() });
+              showToast('Voice note sent! 🎤');
+            }
+          } catch (error) { showToast('Failed to send voice note', true); }
           stream.getTracks().forEach(track => track.stop());
         };
         mediaRecorder.start();
@@ -370,10 +384,7 @@
         attachAudioBtn.style.backgroundColor = '#dc2626';
         attachAudioBtn.innerHTML = '⏹️';
         showToast('Recording... Click again to stop');
-      } catch (error) {
-        console.error("Microphone error:", error);
-        showToast('Microphone access denied. Please allow microphone permissions.');
-      }
+      } catch (error) { showToast('Microphone access denied', true); }
     }
     
     function stopRecording() {
@@ -385,10 +396,10 @@
       }
     }
     
-    attachAudioBtn.addEventListener('click', () => {
-      if (!currentChatId) { showToast('Open a chat first'); return; }
-      if (isRecording) { stopRecording(); }
-      else { startRecording(); }
+    attachAudioBtn?.addEventListener('click', () => {
+      if (!currentChatId) { showToast('Open a chat first', true); return; }
+      if (isRecording) stopRecording();
+      else startRecording();
     });
     
     // ========== INBOX FUNCTIONS ==========
@@ -453,7 +464,7 @@
     };
     
     attachImageBtn.addEventListener('click', () => {
-      if (!currentChatId) { showToast('Open a chat first'); return; }
+      if (!currentChatId) { showToast('Open a chat first', true); return; }
       const fileInput = document.createElement('input'); fileInput.type = 'file'; fileInput.accept = 'image/*';
       fileInput.onchange = async (e) => {
         if (e.target.files[0]) {
@@ -558,7 +569,7 @@
         const snapshot = await getDocs(productsRef);
         if (snapshot.empty) {
           const sampleProducts = [
-            { name: "Mpunga", price: 4500, category: "Food", sellerName: "Chrissy Misanjo", imageUrl: "https://images.unsplash.com/photo-1586201375761-83865001e8ac", sellerId: "sample_seller" },
+            { name: "Mpunga (Rice)", price: 4500, category: "Food", sellerName: "Chrissy Misanjo", imageUrl: "https://images.unsplash.com/photo-1586201375761-83865001e8ac", sellerId: "sample_seller" },
             { name: "Wireless Headphones", price: 75000, category: "Electronics", sellerName: "TechStore", imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e", sellerId: "sample_seller2" },
             { name: "Leather Wallet", price: 25000, category: "Fashion", sellerName: "FashionHub", imageUrl: "https://images.unsplash.com/photo-1590856029826-c7a73142bbf1", sellerId: "sample_seller3" }
           ];

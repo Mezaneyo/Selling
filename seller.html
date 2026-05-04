@@ -134,7 +134,7 @@
     .edit-message, .delete-message { background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 5px; font-size: 10px; }
     .edit-message { color: #667eea; }
     .delete-message { color: #dc2626; }
-    .typing-indicator { padding: 8px 15px; font-size: 12px; color: #666; font-style: italic; display: flex; align-items: center; gap: 5px; }
+    .typing-indicator { padding: 8px 15px; font-size: 12px; color: #666; font-style: italic; display: flex; align-items: center; gap: 5px; background: #f8f9fa; border-radius: 20px; margin: 0 15px; }
     .typing-dots { display: flex; gap: 3px; }
     .typing-dots span { width: 5px; height: 5px; background: #667eea; border-radius: 50%; animation: typing 1.4s infinite; }
     .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
@@ -142,7 +142,7 @@
     @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-5px); opacity: 1; } }
     .chat-input-container { display: flex; padding: 12px; background: white; border-top: 1px solid #e0e0e0; gap: 8px; align-items: center; flex-wrap: wrap; }
     .chat-input { flex: 1; padding: 10px; border: 1px solid #e0e0e0; border-radius: 25px; font-size: 13px; resize: none; font-family: inherit; }
-    .attach-image-btn, .attach-audio-btn { background: #f0f0f0; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+    .attach-image-btn, .attach-audio-btn { background: #f0f0f0; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
     .chat-send { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .chat-toggle-btn { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 50%; color: white; font-size: 24px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; display: flex; align-items: center; justify-content: center; }
     
@@ -217,7 +217,7 @@
     <div class="inbox-container"><div class="inbox-header"><h3>💬 Customer Conversations</h3><button class="close-inbox" id="closeInboxBtn">✕</button></div><div class="inbox-list" id="inboxList"><div style="text-align: center; padding: 20px;">Loading conversations...</div></div></div>
   </div>
 
-  <!-- ENHANCED CHAT MODAL WITH VOICE NOTES -->
+  <!-- ENHANCED CHAT MODAL -->
   <div class="chat-modal" id="chatModal">
     <div class="chat-modal-header"><h3 id="chatWithName">Loading...</h3><button class="close-chat" id="closeChatBtn">✕</button></div>
     <div class="chat-messages" id="chatMessages"><div style="text-align: center; padding: 20px;">Select a conversation</div></div>
@@ -254,6 +254,9 @@
     const db = getFirestore(app);
     
     const IMGBB_API_KEY = "896e4e925b76df72f34389ab1d0832d8";
+    const CLOUDINARY_CLOUD_NAME = "dqmfmxgdy";
+    const CLOUDINARY_UPLOAD_PRESET = "msika_audio";
+    
     let currentUser = null;
     let currentChatId = null;
     let currentChatBuyerId = null;
@@ -300,23 +303,37 @@
       } catch (error) { throw error; }
     }
     
-    // ========== VOICE RECORDING FUNCTIONS ==========
+    async function uploadAudioToCloudinary(audioBlob) {
+      const formData = new FormData();
+      formData.append('file', audioBlob);
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+      formData.append('resource_type', 'video');
+      try {
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, { method: 'POST', body: formData });
+        const data = await response.json();
+        if (data.secure_url) return data.secure_url;
+        throw new Error(data.error?.message || 'Upload failed');
+      } catch (error) { throw error; }
+    }
+    
+    // ========== VOICE RECORDING ==========
     async function startRecording() {
       audioChunks = [];
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = (event) => { audioChunks.push(event.data); };
+        mediaRecorder.ondataavailable = (event) => { if (event.data.size > 0) audioChunks.push(event.data); };
         mediaRecorder.onstop = async () => {
           const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-          const audioUrl = await uploadToImgBB(audioBlob);
-          if (audioUrl && currentChatId) {
-            await addDoc(collection(db, "chats", currentChatId, "messages"), {
-              senderId: currentUser.uid, text: '🎤 Voice note', audioUrl: audioUrl, timestamp: new Date(), read: false, edited: false, deleted: false
-            });
-            await updateDoc(doc(db, "chats", currentChatId), { lastMessage: '🎤 Voice note', lastMessageTime: new Date() });
-            showToast('Voice note sent!');
-          }
+          showToast('Uploading voice note...');
+          try {
+            const audioUrl = await uploadAudioToCloudinary(audioBlob);
+            if (audioUrl && currentChatId) {
+              await addDoc(collection(db, "chats", currentChatId, "messages"), { senderId: currentUser.uid, text: '🎤 Voice note', audioUrl: audioUrl, timestamp: new Date(), read: false, edited: false, deleted: false });
+              await updateDoc(doc(db, "chats", currentChatId), { lastMessage: '🎤 Voice note', lastMessageTime: new Date() });
+              showToast('Voice note sent! 🎤');
+            }
+          } catch (error) { showToast('Failed to send voice note', true); }
           stream.getTracks().forEach(track => track.stop());
         };
         mediaRecorder.start();
@@ -324,10 +341,7 @@
         document.getElementById('attachAudioBtn').style.backgroundColor = '#dc2626';
         document.getElementById('attachAudioBtn').innerHTML = '⏹️';
         showToast('Recording... Click again to stop');
-      } catch (error) {
-        console.error("Microphone error:", error);
-        showToast('Microphone access denied. Please allow microphone permissions.', true);
-      }
+      } catch (error) { showToast('Microphone access denied', true); }
     }
     
     function stopRecording() {
@@ -338,6 +352,12 @@
         document.getElementById('attachAudioBtn').innerHTML = '🎤';
       }
     }
+    
+    document.getElementById('attachAudioBtn')?.addEventListener('click', () => {
+      if (!currentChatId) { showToast('Open a chat first', true); return; }
+      if (isRecording) stopRecording();
+      else startRecording();
+    });
     
     // ========== MULTIPLE IMAGE FUNCTIONS ==========
     window.previewImage = function(input, index) {
@@ -371,11 +391,6 @@
     };
     
     document.getElementById('addMoreImagesBtn').addEventListener('click', addImageInput);
-    document.getElementById('attachAudioBtn').addEventListener('click', () => {
-      if (!currentChatId) { showToast('Open a chat first', true); return; }
-      if (isRecording) { stopRecording(); }
-      else { startRecording(); }
-    });
     
     // ========== PRODUCT FUNCTIONS ==========
     async function loadProducts() {
@@ -393,7 +408,6 @@
     
     window.deleteProduct = async (productId) => { if (confirm('Delete this product?')) { await deleteDoc(doc(db, "products", productId)); showToast('Product deleted!'); loadProducts(); } };
     
-    // Add Product Form
     document.getElementById('product-form').addEventListener('submit', async function(e) {
       e.preventDefault();
       const name = document.getElementById('product-name').value.trim();
