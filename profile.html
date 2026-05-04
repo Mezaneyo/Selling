@@ -22,6 +22,7 @@
             color: white;
             padding: 40px 20px;
             text-align: center;
+            position: relative;
         }
         
         .back-btn {
@@ -76,6 +77,12 @@
             padding: 15px 0;
             border-bottom: 1px solid #e0e0e0;
             cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .menu-item:hover {
+            background: #f8f9fa;
+            padding-left: 10px;
         }
         
         .menu-item:last-child {
@@ -92,6 +99,7 @@
             font-weight: 600;
             width: 100%;
             cursor: pointer;
+            margin-top: 10px;
         }
         
         .bottom-nav {
@@ -123,6 +131,14 @@
             font-size: 12px;
             margin-top: 4px;
         }
+        
+        .badge {
+            background: #667eea;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 11px;
+        }
     </style>
 </head>
 <body>
@@ -135,13 +151,25 @@
     
     <div class="content">
         <div class="card">
-            <h3>Account Settings</h3>
-            <div class="menu-item" onclick="alert('Edit Profile - Coming Soon')">
-                <span>✏️ Edit Profile</span>
+            <h3>📋 Orders & Payments</h3>
+            <div class="menu-item" onclick="window.location.href='order-history.html'">
+                <span>📦 Order History</span>
                 <span>→</span>
             </div>
-            <div class="menu-item" onclick="alert('Order History - Coming Soon')">
-                <span>📦 Order History</span>
+            <div class="menu-item" onclick="window.location.href='checkout.html'">
+                <span>💳 Checkout</span>
+                <span>→</span>
+            </div>
+            <div class="menu-item" onclick="window.location.href='order-confirmation.html'">
+                <span>✅ Order Confirmation</span>
+                <span>→</span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>⚙️ Account Settings</h3>
+            <div class="menu-item" onclick="alert('Edit Profile - Coming Soon')">
+                <span>✏️ Edit Profile</span>
                 <span>→</span>
             </div>
             <div class="menu-item" onclick="alert('Payment Methods - Coming Soon')">
@@ -154,7 +182,7 @@
             </div>
         </div>
         
-        <button class="logout-btn" id="logoutBtn">Logout</button>
+        <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
     </div>
     
     <div class="bottom-nav">
@@ -196,7 +224,7 @@
         
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
-                window.location.href = 'signup.html';
+                window.location.href = 'login.html';
                 return;
             }
             
@@ -209,7 +237,7 @@
         
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await signOut(auth);
-            window.location.href = 'signup.html';
+            window.location.href = 'login.html';
         });
     </script>
 </body>
