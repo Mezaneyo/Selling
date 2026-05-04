@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Order History | Msika Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3f37c9;
+            --success: #4bb543;
+            --error: #f72585;
+            --warning: #ff9800;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border: #dee2e6;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-outline {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .order-list {
+            margin-top: 2rem;
+        }
+
+        .order-item {
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .order-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .order-title {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+
+        .order-date {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .order-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .status-completed {
+            background-color: rgba(75, 181, 67, 0.1);
+            color: #4bb543;
+        }
+
+        .status-pending {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-weight: 500;
+        }
+
+        .order-products {
+            margin-top: 1rem;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+
+        .product-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--light);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+            background-color: var(--light);
+            border-radius: var(--radius-md);
+            margin: 2rem 0;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--border);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            background-color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .nav-item {
+            text-align: center;
+            flex: 1;
+            cursor: pointer;
+            padding: 8px;
+            text-decoration: none;
+            color: #666;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        .nav-label {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .order-header {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-btn" onclick="window.location.href='profile.html'">← Back</button>
+        <div class="logo">📦 Order History</div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-history"></i> My Orders</h1>
+            <div>
+                <button class="btn btn-outline" onclick="window.print()">
+                    <i class="fas fa-print"></i> Print All
+                </button>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <select class="filter-select" id="filter-status">
+                <option value="all">All Statuses</option>
+                <option value="completed">Completed</option>
+                <option value="pending">Pending</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+            <input type="text" class="search-input" id="search-orders" placeholder="Search by order number...">
+        </div>
+
+        <div class="order-list" id="order-list">
+            <div class="loading">Loading orders from Firebase...</div>
+        </div>
+
+        <div class="empty-state" id="empty-state" style="display: none;">
+            <i class="fas fa-box-open"></i>
+            <h3>No Orders Found</h3>
+            <p>You haven't placed any orders yet. Start shopping to see your orders here.</p>
+            <a href="buyer.html" class="btn btn-primary">
+                <i class="fas fa-shopping-cart"></i> Start Shopping
+            </a>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">Home</div>
+        </a>
+        <a href="products.html" class="nav-item">
+            <div class="nav-icon">🔍</div>
+            <div class="nav-label">Explore</div>
+        </a>
+        <a href="cart.html" class="nav-item">
+            <div class="nav-icon">🛒</div>
+            <div class="nav-label">Cart</div>
+        </a>
+        <a href="profile.html" class="nav-item" style="color: #667eea;">
+            <div class="nav-icon">👤</div>
+            <div class="nav-label">Profile</div>
+        </a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAadEukg8HmIUwJ6BC2oYYwbz0qb19iR2I",
+            authDomain: "msika-2.firebaseapp.com",
+            projectId: "msika-2",
+            storageBucket: "msika-2.firebasestorage.app",
+            messagingSenderId: "826396419263",
+            appId: "1:826396419263:web:1fb8752bafd530ba81520a"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        let currentUser = null;
+        let allOrders = [];
+        
+        function formatMWK(amount) {
+            return 'MK ' + amount.toLocaleString();
+        }
+        
+        function formatDate(dateValue) {
+            if (!dateValue) return 'N/A';
+            if (dateValue.toDate) {
+                return dateValue.toDate().toLocaleDateString();
+            }
+            return new Date(dateValue).toLocaleDateString();
+        }
+        
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        async function loadOrdersFromFirestore() {
+            if (!currentUser) return;
+            
+            const orderList = document.getElementById('order-list');
+            const emptyState = document.getElementById('empty-state');
+            
+            orderList.innerHTML = '<div class="loading">Loading orders from Firebase...</div>';
+            
+            try {
+                // Query orders from Firestore for this user
+                const ordersRef = collection(db, "orders");
+                const q = query(ordersRef, where("userId", "==", currentUser.uid), orderBy("orderDate", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    emptyState.style.display = 'block';
+                    orderList.innerHTML = '';
+                    return;
+                }
+                
+                emptyState.style.display = 'none';
+                allOrders = [];
+                
+                for (const docSnap of querySnapshot.docs) {
+                    const order = { id: docSnap.id, ...docSnap.data() };
+                    allOrders.push(order);
+                }
+                
+                renderOrders(allOrders);
+                
+            } catch (error) {
+                console.error("Error loading orders from Firebase:", error);
+                orderList.innerHTML = '<div class="loading">Error loading orders. Please refresh.</div>';
+            }
+        }
+        
+        function renderOrders(orders) {
+            const orderList = document.getElementById('order-list');
+            
+            if (orders.length === 0) {
+                orderList.innerHTML = '<div class="loading">No orders found</div>';
+                return;
+            }
+            
+            orderList.innerHTML = orders.map(order => {
+                const statusClass = order.status === 'completed' ? 'status-completed' : 'status-pending';
+                const statusText = order.status === 'completed' ? '✓ Completed' : '⏳ Pending';
+                const orderDate = formatDate(order.orderDate);
+                const totalAmount = formatMWK(order.total || order.subtotal + (order.tax || 0));
+                
+                // Get products from order
+                const products = order.items || [];
+                
+                return `
+                    <div class="order-item">
+                        <div class="order-header">
+                            <div>
+                                <div class="order-title">Order #${escapeHtml(order.id)}</div>
+                                <div class="order-date">${orderDate}</div>
+                            </div>
+                            <div class="order-status ${statusClass}">
+                                <i class="fas ${order.status === 'completed' ? 'fa-check-circle' : 'fa-clock'}"></i> ${statusText}
+                            </div>
+                        </div>
+                        <div class="order-details">
+                            <div class="detail-group">
+                                <div class="detail-label">Total Amount</div>
+                                <div class="detail-value">${totalAmount}</div>
+                            </div>
+                            <div class="detail-group">
+                                <div class="detail-label">Payment Method</div>
+                                <div class="detail-value">${escapeHtml(order.paymentMethod || 'N/A')}</div>
+                            </div>
+                        </div>
+                        <div class="order-products">
+                            <div class="detail-label">Items:</div>
+                            ${products.map(p => `
+                                <span class="product-badge">
+                                    ${escapeHtml(p.name)} × ${p.quantity} (${formatMWK(p.price)})
+                                </span>
+                            `).join('')}
+                            ${products.length === 0 ? '<span class="product-badge">No items found</span>' : ''}
+                        </div>
+                        <div class="order-actions" style="margin-top: 15px; display: flex; gap: 10px;">
+                            <button class="btn btn-outline btn-sm" onclick="window.location.href='order-confirmation.html?orderNumber=${order.id}'">
+                                <i class="fas fa-eye"></i> View Details
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="window.print()">
+                                <i class="fas fa-print"></i> Print
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function filterOrders() {
+            const statusFilter = document.getElementById('filter-status').value;
+            const searchQuery = document.getElementById('search-orders').value.toLowerCase();
+            
+            let filtered = [...allOrders];
+            
+            if (statusFilter !== 'all') {
+                filtered = filtered.filter(order => order.status === statusFilter);
+            }
+            
+            if (searchQuery) {
+                filtered = filtered.filter(order => 
+                    order.id.toLowerCase().includes(searchQuery)
+                );
+            }
+            
+            renderOrders(filtered);
+        }
+        
+        // Event listeners for filters
+        document.getElementById('filter-status').addEventListener('change', filterOrders);
+        document.getElementById('search-orders').addEventListener('input', filterOrders);
+        
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            currentUser = user;
+            loadOrdersFromFirestore();
+        });
+    </script>
+</body>
+</html>

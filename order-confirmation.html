@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Order Confirmation | Msika Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3f37c9;
+            --success: #4bb543;
+            --error: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border: #dee2e6;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .confirmation-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(75, 181, 67, 0.1);
+            border-radius: 50%;
+        }
+
+        .success-icon svg {
+            width: 50px;
+            height: 50px;
+            color: #4bb543;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            color: var(--dark);
+        }
+
+        .confirmation-message {
+            color: var(--gray);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Payment Details Grid */
+        .payment-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .payment-box {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .payment-box h4 {
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .payment-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+        
+        .payment-detail-label {
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .payment-detail-value {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .instruction-box {
+            background: #e3f2fd;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .order-details {
+            margin: 2rem 0;
+        }
+
+        .order-details h2 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-table th, .detail-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-table th {
+            width: 35%;
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .products-table th {
+            background-color: var(--light);
+            text-align: left;
+            padding: 0.75rem 1rem;
+            font-weight: 500;
+        }
+
+        .products-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.9rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex: 1;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .btn-outline {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .payment-details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media print {
+            .action-buttons {
+                display: none;
+            }
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+                padding: 0;
+            }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .success-icon {
+            animation: scaleIn 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="confirmation-header">
+            <div class="success-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </div>
+            <h1>Order Confirmed!</h1>
+            <p class="confirmation-message">Thank you for your purchase. Your order has been successfully processed.</p>
+        </div>
+
+        <!-- Payment Details Section - Both Buyer and Seller -->
+        <div class="payment-details-grid">
+            <!-- Buyer Payment Details -->
+            <div class="payment-box">
+                <h4>👤 Buyer Information</h4>
+                <div class="payment-detail-row">
+                    <span class="payment-detail-label">Name:</span>
+                    <span class="payment-detail-value" id="buyerName">Loading...</span>
+                </div>
+                <div class="payment-detail-row">
+                    <span class="payment-detail-label">Phone:</span>
+                    <span class="payment-detail-value" id="buyerPhone">Loading...</span>
+                </div>
+                <div class="payment-detail-row">
+                    <span class="payment-detail-label">Email:</span>
+                    <span class="payment-detail-value" id="buyerEmail">Loading...</span>
+                </div>
+            </div>
+            
+            <!-- Seller Payment Details -->
+            <div class="payment-box">
+                <h4>💰 Seller Payment Information</h4>
+                <div id="sellerPaymentDetails">
+                    <div class="payment-detail-row">
+                        <span class="payment-detail-label">Method:</span>
+                        <span class="payment-detail-value" id="sellerMethod">Loading...</span>
+                    </div>
+                    <div id="sellerAccountDetails"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Instructions -->
+        <div class="instruction-box" id="paymentInstructions">
+            <i class="fas fa-info-circle"></i> Loading payment instructions...
+        </div>
+
+        <!-- Order Summary -->
+        <div class="order-details">
+            <h2>Order Summary</h2>
+            <table class="detail-table">
+                <tr>
+                    <th>Order Number</th>
+                    <td id="order-number">Loading...</td>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <td id="order-date">Loading...</td>
+                </tr>
+                <tr>
+                    <th>Total Amount</th>
+                    <td id="order-total">Loading...</td>
+                </tr>
+                <tr>
+                    <th>Payment Method</th>
+                    <td id="payment-method">Loading...</td>
+                </tr>
+            </table>
+
+            <h3>Items Ordered</h3>
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody id="order-products">
+                    <tr><td colspan="3">Loading items...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="action-buttons">
+            <a href="buyer.html" class="btn btn-primary">Continue Shopping</a>
+            <a href="order-history.html" class="btn btn-outline">View Order History</a>
+            <button class="btn btn-outline" onclick="window.print()">Print Receipt</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAadEukg8HmIUwJ6BC2oYYwbz0qb19iR2I",
+            authDomain: "msika-2.firebaseapp.com",
+            projectId: "msika-2",
+            storageBucket: "msika-2.firebasestorage.app",
+            messagingSenderId: "826396419263",
+            appId: "1:826396419263:web:1fb8752bafd530ba81520a"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        function formatMWK(amount) {
+            return 'MK ' + amount.toLocaleString();
+        }
+        
+        function formatDate(dateValue) {
+            if (!dateValue) return 'N/A';
+            if (dateValue.toDate) return dateValue.toDate().toLocaleDateString();
+            return new Date(dateValue).toLocaleDateString();
+        }
+        
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function getMethodName(method) {
+            const methods = {
+                'mpamba': 'TNM Mpamba',
+                'airtel': 'Airtel Money',
+                'bank': 'Bank Transfer',
+                'card': 'Credit/Debit Card'
+            };
+            return methods[method] || method;
+        }
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderNumber = urlParams.get('orderNumber');
+        
+        async function loadOrderDetails() {
+            if (!orderNumber) {
+                document.getElementById('order-number').textContent = 'N/A';
+                return;
+            }
+            
+            try {
+                const orderDoc = await getDoc(doc(db, "orders", orderNumber));
+                
+                if (orderDoc.exists()) {
+                    const order = orderDoc.data();
+                    
+                    // Order details
+                    document.getElementById('order-number').textContent = orderNumber;
+                    document.getElementById('order-date').textContent = formatDate(order.orderDate);
+                    document.getElementById('order-total').textContent = formatMWK(order.total);
+                    document.getElementById('payment-method').textContent = getMethodName(order.paymentMethod);
+                    
+                    // Buyer details
+                    if (order.buyerDetails) {
+                        document.getElementById('buyerName').textContent = order.buyerDetails.name || 'N/A';
+                        document.getElementById('buyerPhone').textContent = order.buyerDetails.phone || 'N/A';
+                        document.getElementById('buyerEmail').textContent = order.buyerDetails.email || 'N/A';
+                    }
+                    
+                    // Products
+                    if (order.items && order.items.length > 0) {
+                        const productsHtml = order.items.map(item => `
+                            <tr>
+                                <td>${escapeHtml(item.name)}</td>
+                                <td>${item.quantity}</td>
+                                <td>${formatMWK(item.price)}</td>
+                            </tr>
+                        `).join('');
+                        document.getElementById('order-products').innerHTML = productsHtml;
+                    }
+                    
+                    // Seller payment details
+                    const sellerSettings = order.sellerPaymentDetails;
+                    if (sellerSettings) {
+                        document.getElementById('sellerMethod').textContent = getMethodName(sellerSettings.method);
+                        
+                        let accountHtml = '';
+                        let instructionHtml = '';
+                        
+                        if (sellerSettings.method === 'mpamba') {
+                            accountHtml = `
+                                <div class="payment-detail-row">
+                                    <span class="payment-detail-label">Mpamba Number:</span>
+                                    <span class="payment-detail-value">${escapeHtml(sellerSettings.mobileNumber || 'N/A')}</span>
+                                </div>
+                                <div class="payment-detail-row">
+                                    <span class="payment-detail-label">Account Name:</span>
+                                    <span class="payment-detail-value">${escapeHtml(sellerSettings.accountName || 'N/A')}</span>
+                                </div>
+                            `;
+                            instructionHtml = `
+                                <i class="fas fa-mobile-alt"></i> 
+                                <strong>Payment Instructions:</strong> Send <strong>${formatMWK(order.total)}</strong> to the Mpamba number above using TNM Mpamba.<br>
+                                Reference: <strong>Order #${orderNumber}</strong><br>
+                                After payment, the seller will confirm your order.
+                            `;
+                        } else if (sellerSettings.method === 'airtel') {
+                            accountHtml = `
+                                <div class="payment-detail-row">
+                                    <span class="payment-detail-label">Airtel Number:</span>
+                                    <span class="payment-detail-value">${escapeHtml(sellerSettings.mobileNumber || 'N/A')}</span>
+                                </div>
+                                <div class="payment-detail-row">
+                                    <span class="payment-detail-label">Account Name:</span>
+                                    <span class="payment-detail-value">${escapeHtml(sellerSettings.accountName || 'N/A')}</span>
+                                </div>
+                            `;
+                            instructionHtml = `
+                                <i class="fas fa-mobile-alt"></i> 
+                                <strong>Payment Instructions:</strong> Send <strong>${formatMWK(order.total)}</strong> to the Airtel Money number above.<br>
+                                Reference: <strong>Order #${orderNumber}</strong><br>
+                                After payment, the seller will confirm your order.
+                            `;
+                        } else if (sellerSettings.method === 'bank') {
+                            accountHtml = `
+                                <div class="payment-detail-row">
+                                    <span class="payment-detail-label">Bank:</span>
+                                    <span class="payment-detail-value">${escapeHtml(sellerSettings.bankName || 'N/A')}</span>
+                                </div>
+                                <div class="payment-detail-row">
+                                    <span class="payment-detail-label">Account Number:</span>
+                                    <span class="payment-detail-value">${escapeHtml(sellerSettings.accountNumber || 'N/A')}</span>
+                                </div>
+                                <div class="payment-detail-row">
+                                    <span class="payment-detail-label">Account Name:</span>
+                                    <span class="payment-detail-value">${escapeHtml(sellerSettings.accountName || 'N/A')}</span>
+                                </div>
+                                <div class="payment-detail-row">
+                                    <span class="payment-detail-label">Branch:</span>
+                                    <span class="payment-detail-value">${escapeHtml(sellerSettings.branch || 'N/A')}</span>
+                                </div>
+                            `;
+                            instructionHtml = `
+                                <i class="fas fa-university"></i> 
+                                <strong>Payment Instructions:</strong> Transfer <strong>${formatMWK(order.total)}</strong> to the bank account above.<br>
+                                Reference: <strong>Order #${orderNumber}</strong><br>
+                                Please send proof of payment to the seller to confirm your order.
+                            `;
+                        }
+                        
+                        document.getElementById('sellerAccountDetails').innerHTML = accountHtml;
+                        document.getElementById('paymentInstructions').innerHTML = instructionHtml;
+                    } else {
+                        document.getElementById('paymentInstructions').innerHTML = `
+                            <i class="fas fa-info-circle"></i> 
+                            Payment details will be provided by the seller. Please contact them directly.
+                        `;
+                    }
+                } else {
+                    document.getElementById('order-number').textContent = orderNumber;
+                    document.getElementById('order-products').innerHTML = '<tr><td colspan="3">Order not found</td></tr>';
+                }
+            } catch (error) {
+                console.error("Error loading order:", error);
+                document.getElementById('order-products').innerHTML = '<tr><td colspan="3">Error loading order details</td></tr>';
+            }
+        }
+        
+        onAuthStateChanged(auth, (user) => {
+            // Load order details even if not logged in (for receipt viewing)
+            loadOrderDetails();
+        });
+    </script>
+</body>
+</html>

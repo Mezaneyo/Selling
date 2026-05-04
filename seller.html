@@ -78,27 +78,6 @@
       color: var(--primary);
     }
     
-    /* Notification Badge */
-    .notification-badge {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background-color: #dc2626;
-      color: white;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      font-size: 0.6rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .notification-btn {
-      position: relative;
-      cursor: pointer;
-    }
-    
     .container {
       max-width: 1200px;
       margin: 2rem auto;
@@ -148,6 +127,7 @@
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 500;
+      color: var(--text-color);
     }
     
     .form-control {
@@ -156,6 +136,7 @@
       border: 1px solid var(--border-color);
       border-radius: 10px;
       font-size: 1rem;
+      transition: var(--transition);
       background-color: var(--card-bg);
       color: var(--text-color);
     }
@@ -163,6 +144,7 @@
     .form-control:focus {
       outline: none;
       border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
     }
     
     textarea.form-control {
@@ -175,6 +157,7 @@
       border-radius: 10px;
       font-weight: 600;
       cursor: pointer;
+      transition: var(--transition);
       border: none;
       font-size: 1rem;
       display: inline-flex;
@@ -190,6 +173,7 @@
     
     .btn-primary:hover {
       transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(102,126,234,0.4);
     }
     
     .btn-danger {
@@ -326,275 +310,137 @@
       opacity: 1;
     }
     
-    /* ========== INBOX MODAL ========== */
-    .inbox-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 2000;
-      align-items: center;
-      justify-content: center;
+    .payment-fields {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 10px;
     }
     
-    .inbox-container {
-      background: white;
-      width: 90%;
-      max-width: 500px;
-      height: 80%;
-      border-radius: 20px;
+    /* Order List Styles */
+    .orders-list {
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      animation: slideUp 0.3s ease;
+      gap: 1rem;
     }
     
-    .inbox-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 15px 20px;
+    .order-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: all 0.3s;
+    }
+    
+    .order-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .order-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-    
-    .inbox-header h3 {
-      font-size: 18px;
-    }
-    
-    .close-inbox {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 24px;
-      cursor: pointer;
-    }
-    
-    .inbox-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px;
-    }
-    
-    .inbox-item {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      padding: 15px;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
       border-bottom: 1px solid #e0e0e0;
-      cursor: pointer;
-      transition: background 0.2s;
     }
     
-    .inbox-item:hover {
-      background: #f8f9fa;
+    .order-number {
+      font-weight: 700;
+      color: #667eea;
+      font-size: 1.1rem;
     }
     
-    .inbox-avatar {
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      color: white;
-    }
-    
-    .inbox-info {
-      flex: 1;
-    }
-    
-    .inbox-name {
-      font-weight: 600;
-      margin-bottom: 5px;
-    }
-    
-    .inbox-last-message {
-      font-size: 13px;
-      color: #666;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    
-    .inbox-time {
-      font-size: 11px;
-      color: #999;
-    }
-    
-    .inbox-unread {
-      background: #dc2626;
-      color: white;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .empty-inbox {
-      text-align: center;
-      padding: 40px;
-      color: #999;
-    }
-    
-    /* Chat Modal */
-    .chat-modal {
-      display: none;
-      position: fixed;
-      bottom: 80px;
-      right: 20px;
-      width: 350px;
-      height: 500px;
-      background: white;
+    .order-status {
+      padding: 0.25rem 0.75rem;
       border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-      z-index: 1000;
-      flex-direction: column;
-      overflow: hidden;
+      font-size: 0.8rem;
+      font-weight: 600;
     }
     
-    .chat-modal-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 15px;
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+    
+    .status-processing {
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+    
+    .status-completed {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .status-cancelled {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    
+    .order-buyer {
+      margin-bottom: 1rem;
+    }
+    
+    .buyer-name {
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .buyer-contact {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 0.25rem;
+    }
+    
+    .order-items {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .order-item {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #e0e0e0;
     }
     
-    .chat-modal-header h3 {
-      font-size: 16px;
+    .order-item:last-child {
+      border-bottom: none;
     }
     
-    .close-chat {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 15px;
+    .order-total {
       display: flex;
-      flex-direction: column;
-      gap: 10px;
-      background: #f8f9fa;
-    }
-    
-    .chat-message {
-      max-width: 80%;
-      padding: 10px 12px;
-      border-radius: 18px;
-      font-size: 13px;
-    }
-    
-    .chat-message.sent {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
-    }
-    
-    .chat-message.received {
-      background: white;
-      color: #333;
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    }
-    
-    .message-sender {
-      font-size: 11px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      opacity: 0.8;
-    }
-    
-    .chat-message.sent .message-sender {
-      text-align: right;
-    }
-    
-    .chat-message-time {
-      font-size: 10px;
-      opacity: 0.7;
-      margin-top: 4px;
-      text-align: right;
-    }
-    
-    .chat-input-container {
-      display: flex;
-      padding: 12px;
-      background: white;
+      justify-content: space-between;
+      margin: 1rem 0;
+      padding-top: 0.5rem;
+      font-weight: 700;
       border-top: 1px solid #e0e0e0;
-      gap: 10px;
     }
     
-    .chat-input {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #e0e0e0;
-      border-radius: 25px;
-      font-size: 13px;
-      resize: none;
-      font-family: inherit;
-    }
-    
-    .chat-send {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: none;
-      color: white;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-    
-    .chat-toggle-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: none;
-      border-radius: 50%;
-      color: white;
-      font-size: 24px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      z-index: 999;
+    .order-actions {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
     }
     
-    .upload-progress {
-      margin-top: 10px;
-      font-size: 12px;
-      color: var(--gray);
-      display: none;
+    .status-select {
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      background: white;
+      cursor: pointer;
     }
     
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .btn-small {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.75rem;
     }
     
     @media (max-width: 768px) {
@@ -610,32 +456,22 @@
         grid-template-columns: 1fr;
       }
       
-      .chat-modal {
-        width: 100%;
-        height: 100%;
-        bottom: 0;
-        right: 0;
-        border-radius: 0;
+      .card {
+        padding: 1.5rem;
       }
       
-      .inbox-container {
-        width: 95%;
-        height: 90%;
+      .order-header {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="nav-brand">
-      🛒 Msika Marketplace
-    </div>
+    <div class="nav-brand">🛒 Msika Marketplace</div>
     <div class="nav-links">
       <a href="buyer.html" class="nav-link">🛍️ Shop</a>
-      <div class="nav-link notification-btn" id="inboxBtn">
-        💬 Messages
-        <span class="notification-badge" id="inboxBadge" style="display: none;">0</span>
-      </div>
       <a href="#" class="nav-link" onclick="logout()">🚪 Logout</a>
     </div>
   </header>
@@ -643,11 +479,10 @@
   <div class="container">
     <div class="dashboard-header">
       <h1 class="section-title">📦 Seller Dashboard</h1>
-      <div class="stats-card">
-        📊 Products: <span id="product-count">0</span>
-      </div>
+      <div class="stats-card">📊 Products: <span id="product-count">0</span></div>
     </div>
 
+    <!-- Add Product Card -->
     <div class="card">
       <h2 class="section-title">➕ Add New Product</h2>
       <form id="product-form">
@@ -682,7 +517,6 @@
           <label class="form-label">Product Image *</label>
           <input type="file" id="product-image" class="form-control" accept="image/*" required>
           <img id="product-image-preview" alt="Preview">
-          <div class="upload-progress" id="upload-progress">⏳ Uploading image...</div>
         </div>
         
         <button type="submit" class="btn btn-primary" id="submit-btn">
@@ -692,48 +526,98 @@
       </form>
     </div>
 
+    <!-- Payment Settings Card -->
+    <div class="card">
+      <h2 class="section-title">💰 Payment Settings</h2>
+      <p style="color: #666; margin-bottom: 15px;">Set up how you want to receive payments from buyers. These details will appear on the buyer's receipt.</p>
+      
+      <form id="paymentSettingsForm">
+        <div class="form-group">
+          <label class="form-label">Payment Method *</label>
+          <select id="paymentMethod" class="form-control" required>
+            <option value="">Select Payment Method</option>
+            <option value="mpamba">Mpamba (TNM)</option>
+            <option value="airtel">Airtel Money</option>
+            <option value="bank">Bank Transfer</option>
+          </select>
+        </div>
+        
+        <div id="mpambaFields" class="payment-fields" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">Mpamba Phone Number *</label>
+            <input type="tel" id="mpambaNumber" class="form-control" placeholder="0881 234 567">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Account Name *</label>
+            <input type="text" id="mpambaName" class="form-control" placeholder="Your full name">
+          </div>
+        </div>
+        
+        <div id="airtelFields" class="payment-fields" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">Airtel Money Number *</label>
+            <input type="tel" id="airtelNumber" class="form-control" placeholder="0991 234 567">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Account Name *</label>
+            <input type="text" id="airtelName" class="form-control" placeholder="Your full name">
+          </div>
+        </div>
+        
+        <div id="bankFields" class="payment-fields" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">Bank Name *</label>
+            <select id="bankName" class="form-control">
+              <option value="">Select Bank</option>
+              <option value="National Bank of Malawi">National Bank of Malawi</option>
+              <option value="Standard Bank">Standard Bank</option>
+              <option value="FDH Bank">FDH Bank</option>
+              <option value="NBS Bank">NBS Bank</option>
+              <option value="Opportunity Bank">Opportunity Bank</option>
+              <option value="MyBucks">MyBucks</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Account Number *</label>
+            <input type="text" id="bankAccountNumber" class="form-control" placeholder="Your account number">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Account Name *</label>
+            <input type="text" id="bankAccountName" class="form-control" placeholder="Account holder name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Branch *</label>
+            <input type="text" id="bankBranch" class="form-control" placeholder="Branch name">
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Save Payment Settings</button>
+      </form>
+      
+      <div id="paymentSettingsStatus" style="margin-top: 15px;"></div>
+    </div>
+
+    <!-- Products Section -->
     <h2 class="section-title">📋 Your Products</h2>
     <div class="products-grid" id="products-container">
       <div class="empty-state">Loading products...</div>
+    </div>
+
+    <!-- Orders Section - Orders from Buyers -->
+    <div style="margin-top: 2rem;">
+      <h2 class="section-title">📦 Orders from Buyers</h2>
+      <div id="orders-container" class="orders-list">
+        <div class="empty-state">Loading orders...</div>
+      </div>
     </div>
   </div>
 
   <div class="toast" id="toast"><span id="toast-message"></span></div>
 
-  <!-- INBOX MODAL - All Customer Messages -->
-  <div class="inbox-modal" id="inboxModal">
-    <div class="inbox-container">
-      <div class="inbox-header">
-        <h3>💬 Messages from Customers</h3>
-        <button class="close-inbox" id="closeInboxBtn">✕</button>
-      </div>
-      <div class="inbox-list" id="inboxList">
-        <div style="text-align: center; padding: 20px;">Loading conversations...</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Chat Modal -->
-  <div class="chat-modal" id="chatModal">
-    <div class="chat-modal-header">
-      <h3 id="chatWithName">Loading...</h3>
-      <button class="close-chat" id="closeChatBtn">✕</button>
-    </div>
-    <div class="chat-messages" id="chatMessages">
-      <div style="text-align: center; padding: 20px;">Loading messages...</div>
-    </div>
-    <div class="chat-input-container">
-      <textarea class="chat-input" id="chatInput" placeholder="Type a message..." rows="1"></textarea>
-      <button class="chat-send" id="sendChatBtn">📤</button>
-    </div>
-  </div>
-
-  <button class="chat-toggle-btn" id="chatToggleBtn">💬</button>
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
     import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-    import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, query, where, getDoc, updateDoc, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, query, where, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
     
     const firebaseConfig = {
       apiKey: "AIzaSyAadEukg8HmIUwJ6BC2oYYwbz0qb19iR2I",
@@ -751,41 +635,26 @@
     const IMGBB_API_KEY = "896e4e925b76df72f34389ab1d0832d8";
     
     let currentUser = null;
-    let currentChatId = null;
-    let currentChatBuyerId = null;
-    let unsubscribeMessages = null;
-    let userNameCache = {};
     
-    // DOM Elements
-    const inboxModal = document.getElementById('inboxModal');
-    const inboxBtn = document.getElementById('inboxBtn');
-    const closeInboxBtn = document.getElementById('closeInboxBtn');
-    const inboxList = document.getElementById('inboxList');
-    const inboxBadge = document.getElementById('inboxBadge');
-    
-    const chatModal = document.getElementById('chatModal');
-    const chatToggleBtn = document.getElementById('chatToggleBtn');
-    const closeChatBtn = document.getElementById('closeChatBtn');
-    const chatMessages = document.getElementById('chatMessages');
-    const chatInput = document.getElementById('chatInput');
-    const sendChatBtn = document.getElementById('sendChatBtn');
-    const chatWithName = document.getElementById('chatWithName');
-    
-    // Helper Functions
     function formatMWK(amount) {
       return 'MK ' + amount.toLocaleString();
     }
     
-    async function getUserName(userId) {
-      if (userNameCache[userId]) return userNameCache[userId];
-      try {
-        const userDoc = await getDoc(doc(db, "users", userId));
-        const name = userDoc.exists() ? (userDoc.data().fullName || userDoc.data().email?.split('@')[0] || 'User') : 'User';
-        userNameCache[userId] = name;
-        return name;
-      } catch (error) {
-        return 'User';
-      }
+    function getStatusText(status) {
+      const statuses = {
+        'pending': '⏳ Pending',
+        'processing': '🔄 Processing',
+        'completed': '✅ Completed',
+        'cancelled': '❌ Cancelled'
+      };
+      return statuses[status] || '📋 Unknown';
+    }
+    
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
     
     function showToast(message, isError = false) {
@@ -800,208 +669,25 @@
     async function uploadImageToImgBB(file) {
       const formData = new FormData();
       formData.append('image', file);
-      const progressDiv = document.getElementById('upload-progress');
-      progressDiv.style.display = 'block';
+      
       try {
-        const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
+        const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+          method: 'POST',
+          body: formData
+        });
         const data = await response.json();
-        progressDiv.style.display = 'none';
         if (data.success) return data.data.url;
         throw new Error(data.error?.message || 'Upload failed');
       } catch (error) {
-        progressDiv.style.display = 'none';
+        console.error("Upload error:", error);
         throw error;
       }
     }
     
-    // ========== INBOX FUNCTIONS ==========
-    async function loadInbox() {
-      if (!currentUser) return;
-      
-      const chatsRef = collection(db, "chats");
-      const q = query(chatsRef, where("participants", "array-contains", currentUser.uid));
-      const snapshot = await getDocs(q);
-      
-      if (snapshot.empty) {
-        inboxList.innerHTML = '<div class="empty-inbox">💬 No messages yet. Customers will appear here when they contact you.</div>';
-        inboxBadge.style.display = 'none';
-        return;
-      }
-      
-      let conversations = [];
-      let totalUnread = 0;
-      
-      for (const docSnap of snapshot.docs) {
-        const chat = { id: docSnap.id, ...docSnap.data() };
-        const otherId = chat.participants.find(p => p !== currentUser.uid);
-        const customerName = await getUserName(otherId);
-        
-        // Count unread messages
-        const messagesRef = collection(db, "chats", chat.id, "messages");
-        const unreadQuery = query(messagesRef, where("read", "==", false), where("senderId", "!=", currentUser.uid));
-        const unreadSnap = await getDocs(unreadQuery);
-        const unreadCount = unreadSnap.size;
-        totalUnread += unreadCount;
-        
-        conversations.push({
-          id: chat.id,
-          customerId: otherId,
-          customerName: customerName,
-          productName: chat.productName || 'Product',
-          lastMessage: chat.lastMessage || 'No messages yet',
-          lastMessageTime: chat.lastMessageTime,
-          unreadCount: unreadCount
-        });
-      }
-      
-      // Sort by last message time (newest first)
-      conversations.sort((a, b) => {
-        const timeA = a.lastMessageTime?.toDate ? a.lastMessageTime.toDate() : new Date(0);
-        const timeB = b.lastMessageTime?.toDate ? b.lastMessageTime.toDate() : new Date(0);
-        return timeB - timeA;
-      });
-      
-      // Update unread badge
-      if (totalUnread > 0) {
-        inboxBadge.style.display = 'flex';
-        inboxBadge.textContent = totalUnread > 99 ? '99+' : totalUnread;
-      } else {
-        inboxBadge.style.display = 'none';
-      }
-      
-      // Render inbox list
-      inboxList.innerHTML = conversations.map(conv => `
-        <div class="inbox-item" data-chat-id="${conv.id}" data-customer-id="${conv.customerId}" data-customer-name="${conv.customerName}" data-product-name="${conv.productName}">
-          <div class="inbox-avatar">👤</div>
-          <div class="inbox-info">
-            <div class="inbox-name">${escapeHtml(conv.customerName)}</div>
-            <div class="inbox-last-message">${escapeHtml(conv.lastMessage)}</div>
-            <div class="inbox-product">Re: ${escapeHtml(conv.productName)}</div>
-          </div>
-          <div class="inbox-time">${formatTime(conv.lastMessageTime)}</div>
-          ${conv.unreadCount > 0 ? `<div class="inbox-unread">${conv.unreadCount}</div>` : ''}
-        </div>
-      `).join('');
-      
-      // Add click handlers
-      document.querySelectorAll('.inbox-item').forEach(item => {
-        item.addEventListener('click', () => {
-          const chatId = item.dataset.chatId;
-          const customerName = item.dataset.customerName;
-          const productName = item.dataset.productName;
-          openChat(chatId, customerName, productName);
-          inboxModal.style.display = 'none';
-        });
-      });
-    }
-    
-    // ========== CHAT FUNCTIONS ==========
-    async function openChat(chatId, customerName, productName) {
-      if (unsubscribeMessages) unsubscribeMessages();
-      
-      currentChatId = chatId;
-      chatWithName.innerHTML = `${escapeHtml(customerName)}<br><small style="font-size: 11px;">${escapeHtml(productName)}</small>`;
-      chatMessages.innerHTML = '<div style="text-align: center; padding: 20px;">Loading messages...</div>';
-      
-      const messagesRef = collection(db, "chats", chatId, "messages");
-      const q = query(messagesRef, orderBy("timestamp", "asc"));
-      
-      unsubscribeMessages = onSnapshot(q, async (snapshot) => {
-        if (snapshot.empty) {
-          chatMessages.innerHTML = '<div style="text-align: center; padding: 20px;">No messages yet. Start the conversation!</div>';
-          return;
-        }
-        
-        let html = '';
-        for (const docSnap of snapshot.docs) {
-          const msg = docSnap.data();
-          const isSent = msg.senderId === currentUser.uid;
-          const senderName = isSent ? 'You' : customerName;
-          html += `
-            <div class="chat-message ${isSent ? 'sent' : 'received'}">
-              <div class="message-sender">${escapeHtml(senderName)}</div>
-              ${escapeHtml(msg.text)}
-              <div class="chat-message-time">${formatTime(msg.timestamp)}</div>
-            </div>
-          `;
-        }
-        chatMessages.innerHTML = html;
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      });
-      
-      // Mark all messages as read
-      const unreadQuery = query(messagesRef, where("read", "==", false), where("senderId", "!=", currentUser.uid));
-      const unreadMsgs = await getDocs(unreadQuery);
-      for (const msg of unreadMsgs.docs) {
-        await updateDoc(doc(db, "chats", chatId, "messages", msg.id), { read: true });
-      }
-      await loadInbox(); // Refresh inbox unread counts
-      
-      chatModal.style.display = 'flex';
-      chatInput.focus();
-    }
-    
-    async function sendChatMessage() {
-      const text = chatInput.value.trim();
-      if (!text || !currentChatId) return;
-      
-      await addDoc(collection(db, "chats", currentChatId, "messages"), {
-        senderId: currentUser.uid,
-        text: text,
-        timestamp: new Date(),
-        read: false
-      });
-      
-      await updateDoc(doc(db, "chats", currentChatId), {
-        lastMessage: text,
-        lastMessageTime: new Date()
-      });
-      
-      chatInput.value = '';
-      await loadInbox(); // Update last message preview
-    }
-    
-    // Message buyer from product card
-    window.messageBuyer = async (productId) => {
-      if (!currentUser) return;
-      
-      const cartRef = collection(db, "cart");
-      const cartQuery = query(cartRef, where("productId", "==", productId));
-      const cartSnapshot = await getDocs(cartQuery);
-      
-      if (cartSnapshot.empty) {
-        showToast('No buyers have shown interest in this product yet', true);
-        return;
-      }
-      
-      const buyerId = cartSnapshot.docs[0].data().userId;
-      const buyerDoc = await getDoc(doc(db, "users", buyerId));
-      const buyerName = buyerDoc.exists() ? buyerDoc.data().fullName : 'Buyer';
-      const productName = document.querySelector(`.product-title`)?.innerText || 'Product';
-      
-      const chatsRef = collection(db, "chats");
-      const chatQuery = query(chatsRef, where("participants", "array-contains", currentUser.uid), where("productId", "==", productId));
-      const existingChats = await getDocs(chatQuery);
-      
-      let chatId;
-      if (!existingChats.empty) {
-        chatId = existingChats.docs[0].id;
-      } else {
-        const newChat = await addDoc(collection(db, "chats"), {
-          participants: [currentUser.uid, buyerId],
-          productId: productId,
-          productName: productName,
-          createdAt: new Date()
-        });
-        chatId = newChat.id;
-      }
-      
-      await openChat(chatId, buyerName, productName);
-    };
-    
     // ========== PRODUCT FUNCTIONS ==========
     async function loadProducts() {
       if (!currentUser) return;
+      
       try {
         const q = query(collection(db, "products"), where("sellerId", "==", currentUser.uid));
         const snapshot = await getDocs(q);
@@ -1025,7 +711,6 @@
               <div class="product-footer">
                 <div class="product-price">${formatMWK(product.price)}</div>
                 <div class="product-actions">
-                  <button class="btn btn-sm btn-success" onclick="messageBuyer('${product.id}')">💬 Message</button>
                   <button class="btn btn-sm btn-danger" onclick="deleteProduct('${product.id}')">🗑️ Delete</button>
                 </div>
               </div>
@@ -1046,17 +731,162 @@
       }
     };
     
-    function escapeHtml(text) {
-      if (!text) return '';
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
+    // ========== ORDER MANAGEMENT FUNCTIONS ==========
+    async function loadSellerOrders() {
+      if (!currentUser) return;
+      
+      const ordersContainer = document.getElementById('orders-container');
+      if (!ordersContainer) return;
+      
+      ordersContainer.innerHTML = '<div class="empty-state">Loading orders...</div>';
+      
+      try {
+        const ordersRef = collection(db, "orders");
+        const snapshot = await getDocs(ordersRef);
+        
+        const sellerOrders = [];
+        
+        for (const docSnap of snapshot.docs) {
+          const order = { id: docSnap.id, ...docSnap.data() };
+          // Check if any item in the order belongs to this seller
+          const hasSellerProducts = order.items && order.items.some(item => item.sellerId === currentUser.uid);
+          if (hasSellerProducts) {
+            sellerOrders.push(order);
+          }
+        }
+        
+        sellerOrders.sort((a, b) => {
+          const dateA = a.orderDate?.toDate ? a.orderDate.toDate() : new Date(0);
+          const dateB = b.orderDate?.toDate ? b.orderDate.toDate() : new Date(0);
+          return dateB - dateA;
+        });
+        
+        if (sellerOrders.length === 0) {
+          ordersContainer.innerHTML = '<div class="empty-state">📦 No orders yet. When buyers purchase your products, they will appear here.</div>';
+          return;
+        }
+        
+        ordersContainer.innerHTML = sellerOrders.map(order => {
+          const buyer = order.buyerDetails || {};
+          const orderItems = order.items || [];
+          const sellerItems = orderItems.filter(item => item.sellerId === currentUser.uid);
+          const orderTotal = sellerItems.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
+          
+          return `
+            <div class="order-card" id="order-${order.id}">
+              <div class="order-header">
+                <div class="order-number">Order #${order.id}</div>
+                <div class="order-status status-${order.status || 'pending'}">
+                  ${getStatusText(order.status || 'pending')}
+                </div>
+              </div>
+              
+              <div class="order-buyer">
+                <div class="buyer-name">👤 ${escapeHtml(buyer.name || 'Unknown Buyer')}</div>
+                <div class="buyer-contact">
+                  📞 ${escapeHtml(buyer.phone || 'No phone')} &nbsp;|&nbsp;
+                  📧 ${escapeHtml(buyer.email || 'No email')}
+                </div>
+              </div>
+              
+              <div class="order-items">
+                <strong>Items from you:</strong>
+                ${sellerItems.map(item => `
+                  <div class="order-item">
+                    <span>${escapeHtml(item.name)} × ${item.quantity}</span>
+                    <span>${formatMWK(item.price * item.quantity)}</span>
+                  </div>
+                `).join('')}
+                <div class="order-total">
+                  <span>Total for your items:</span>
+                  <span>${formatMWK(orderTotal)}</span>
+                </div>
+              </div>
+              
+              <div class="order-actions">
+                <select id="status-select-${order.id}" class="status-select" onchange="updateOrderStatus('${order.id}', this.value)">
+                  <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>⏳ Pending</option>
+                  <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>🔄 Processing</option>
+                  <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>✅ Completed</option>
+                  <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>❌ Cancelled</option>
+                </select>
+                <button class="btn btn-sm btn-success" onclick="messageBuyerFromOrder('${order.id}', '${escapeHtml(buyer.name || 'Buyer')}')">
+                  💬 Message Buyer
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error("Error loading orders:", error);
+        ordersContainer.innerHTML = '<div class="empty-state">Error loading orders. Please refresh.</div>';
+      }
     }
     
-    function formatTime(timestamp) {
-      if (!timestamp) return '';
-      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    window.updateOrderStatus = async (orderId, newStatus) => {
+      try {
+        await updateDoc(doc(db, "orders", orderId), {
+          status: newStatus,
+          updatedAt: new Date()
+        });
+        showToast(`Order status updated to ${getStatusText(newStatus)}`);
+        
+        // Refresh orders display
+        await loadSellerOrders();
+      } catch (error) {
+        console.error("Error updating order status:", error);
+        showToast('Failed to update order status', true);
+      }
+    };
+    
+    window.messageBuyerFromOrder = async (orderId, buyerName) => {
+      showToast(`Opening chat with ${buyerName}...`);
+      // In a full implementation, this would open a chat modal
+      alert(`💬 Message ${buyerName}\n\nYou can communicate with the buyer about this order.\n\nOrder #${orderId}`);
+    };
+    
+    // ========== PAYMENT SETTINGS FUNCTIONS ==========
+    async function loadPaymentSettings() {
+      if (!currentUser) return;
+      
+      try {
+        const settingsDoc = await getDoc(doc(db, "sellerPaymentSettings", currentUser.uid));
+        if (settingsDoc.exists()) {
+          const settings = settingsDoc.data();
+          
+          document.getElementById('paymentMethod').value = settings.method || '';
+          togglePaymentFields(settings.method);
+          
+          if (settings.method === 'mpamba') {
+            document.getElementById('mpambaNumber').value = settings.mobileNumber || '';
+            document.getElementById('mpambaName').value = settings.accountName || '';
+          } else if (settings.method === 'airtel') {
+            document.getElementById('airtelNumber').value = settings.mobileNumber || '';
+            document.getElementById('airtelName').value = settings.accountName || '';
+          } else if (settings.method === 'bank') {
+            document.getElementById('bankName').value = settings.bankName || '';
+            document.getElementById('bankAccountNumber').value = settings.accountNumber || '';
+            document.getElementById('bankAccountName').value = settings.accountName || '';
+            document.getElementById('bankBranch').value = settings.branch || '';
+          }
+        }
+      } catch (error) {
+        console.error("Error loading payment settings:", error);
+      }
+    }
+    
+    function togglePaymentFields(method) {
+      document.getElementById('mpambaFields').style.display = 'none';
+      document.getElementById('airtelFields').style.display = 'none';
+      document.getElementById('bankFields').style.display = 'none';
+      
+      if (method === 'mpamba') {
+        document.getElementById('mpambaFields').style.display = 'block';
+      } else if (method === 'airtel') {
+        document.getElementById('airtelFields').style.display = 'block';
+      } else if (method === 'bank') {
+        document.getElementById('bankFields').style.display = 'block';
+      }
     }
     
     // Image preview
@@ -1075,6 +905,7 @@
     // Add product form
     document.getElementById('product-form').addEventListener('submit', async function(e) {
       e.preventDefault();
+      
       const name = document.getElementById('product-name').value.trim();
       const price = parseFloat(document.getElementById('product-price').value);
       const category = document.getElementById('product-category').value;
@@ -1115,32 +946,64 @@
       }
     });
     
-    // Chat event listeners
-    sendChatBtn.addEventListener('click', sendChatMessage);
-    chatInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendChatMessage();
-      }
-    });
-    closeChatBtn.addEventListener('click', () => {
-      chatModal.style.display = 'none';
-      if (unsubscribeMessages) unsubscribeMessages();
-    });
-    chatToggleBtn.addEventListener('click', () => {
-      chatModal.style.display = chatModal.style.display === 'flex' ? 'none' : 'flex';
+    // Payment Settings Form
+    document.getElementById('paymentMethod').addEventListener('change', (e) => {
+      togglePaymentFields(e.target.value);
     });
     
-    // Inbox event listeners
-    inboxBtn.addEventListener('click', () => {
-      loadInbox();
-      inboxModal.style.display = 'flex';
-    });
-    closeInboxBtn.addEventListener('click', () => {
-      inboxModal.style.display = 'none';
-    });
-    window.addEventListener('click', (e) => {
-      if (e.target === inboxModal) inboxModal.style.display = 'none';
+    document.getElementById('paymentSettingsForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const method = document.getElementById('paymentMethod').value;
+      if (!method) {
+        showToast('Please select a payment method', true);
+        return;
+      }
+      
+      let settings = { method: method, updatedAt: new Date() };
+      
+      if (method === 'mpamba') {
+        const mobileNumber = document.getElementById('mpambaNumber').value;
+        const accountName = document.getElementById('mpambaName').value;
+        if (!mobileNumber || !accountName) {
+          showToast('Please fill all Mpamba details', true);
+          return;
+        }
+        settings.mobileNumber = mobileNumber;
+        settings.accountName = accountName;
+        settings.provider = 'TNM Mpamba';
+      } else if (method === 'airtel') {
+        const mobileNumber = document.getElementById('airtelNumber').value;
+        const accountName = document.getElementById('airtelName').value;
+        if (!mobileNumber || !accountName) {
+          showToast('Please fill all Airtel details', true);
+          return;
+        }
+        settings.mobileNumber = mobileNumber;
+        settings.accountName = accountName;
+        settings.provider = 'Airtel Money';
+      } else if (method === 'bank') {
+        const bankName = document.getElementById('bankName').value;
+        const accountNumber = document.getElementById('bankAccountNumber').value;
+        const accountName = document.getElementById('bankAccountName').value;
+        const branch = document.getElementById('bankBranch').value;
+        if (!bankName || !accountNumber || !accountName || !branch) {
+          showToast('Please fill all bank details', true);
+          return;
+        }
+        settings.bankName = bankName;
+        settings.accountNumber = accountNumber;
+        settings.accountName = accountName;
+        settings.branch = branch;
+      }
+      
+      try {
+        await setDoc(doc(db, "sellerPaymentSettings", currentUser.uid), settings);
+        showToast('✅ Payment settings saved successfully!');
+      } catch (error) {
+        console.error("Error saving payment settings:", error);
+        showToast('❌ Error saving settings', true);
+      }
     });
     
     window.logout = async () => {
@@ -1163,14 +1026,8 @@
       }
       
       await loadProducts();
-      await loadInbox();
-      
-      // Refresh inbox every 10 seconds
-      setInterval(() => {
-        if (inboxModal.style.display !== 'flex') {
-          loadInbox();
-        }
-      }, 10000);
+      await loadPaymentSettings();
+      await loadSellerOrders();
     });
   </script>
 </body>
