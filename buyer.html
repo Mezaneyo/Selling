@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Your existing styles - keeping them concise for space */
     :root {
       --primary: #4361ee;
       --primary-hover: #3a56d4;
@@ -249,34 +248,40 @@
               <div class="product-price">${formatMWK(product.price || 0)}</div>
             </div>
             <div class="action-buttons">
-              <button class="add-to-cart" onclick="addToCart('${product.id}','${product.sellerId}','${escapeHtml(product.name)}','${product.price}','${escapeHtml(product.imageUrl)}','${escapeHtml(product.sellerName)}')">🛒 Add to Cart</button>
-              <button class="message-seller" onclick="openChatWithSeller('${product.id}', '${product.sellerId}', '${escapeHtml(product.sellerName)}', '${escapeHtml(product.name)}')">💬 Message</button>
+              <button class="add-to-cart" onclick="addToCart('${product.id}')">🛒 Add to Cart</button>
+              <button class="message-seller" onclick="openChatWithSeller('${product.id}', '${product.sellerId}', '${escapeHtml(product.sellerName || 'Seller')}', '${escapeHtml(product.name)}')">💬 Message</button>
             </div>
           </div>
         </div>
       `).join('');
     }
     
-    window.addToCart = async (productId, sellerId, productName, productPrice, productImage, sellerName) => {
+    window.addToCart = async (productId) => {
       if (!currentUser) { showToast('Please login first'); window.location.href = 'login.html'; return; }
+      
+      const product = allProducts.find(p => p.id == productId);
+      if (!product) { showToast('Product not found'); return; }
+      
+      if (!product.sellerId) { showToast('Error: Product missing seller info', true); return; }
+      
       try {
         const cartRef = collection(db, "cart");
         const q = query(cartRef, where("userId", "==", currentUser.uid), where("productId", "==", productId));
         const existing = await getDocs(q);
-        if (!existing.empty) { showToast(`${productName} is already in your cart`); return; }
+        if (!existing.empty) { showToast(`${product.name} is already in your cart`); return; }
         
         await addDoc(collection(db, "cart"), {
           userId: currentUser.uid,
-          productId: productId,
-          productName: productName,
-          productPrice: parseFloat(productPrice),
-          productImage: productImage,
-          sellerName: sellerName,
-          sellerId: sellerId,  // CRITICAL: Save seller ID
+          productId: product.id,
+          productName: product.name,
+          productPrice: product.price,
+          productImage: product.imageUrl,
+          sellerName: product.sellerName || 'Seller',
+          sellerId: product.sellerId,
           quantity: 1,
           addedAt: new Date()
         });
-        showToast(`${productName} added to cart! 🛒`);
+        showToast(`${product.name} added to cart! 🛒`);
         await updateCartCount();
       } catch (error) { console.error("Error:", error); showToast('Failed to add to cart'); }
     };

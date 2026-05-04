@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Secure Checkout | Msika Marketplace</title>
     <style>
-        :root { --primary: #4361ee; --secondary: #3f37c9; --success: #4bb543; --error: #f72585; --light: #f8f9fa; --dark: #212529; --gray: #6c757d; --border: #dee2e6; --radius-sm: 4px; --radius-md: 8px; --shadow-sm: 0 1px 3px rgba(0,0,0,0.1); --transition: all 0.2s ease; }
+        :root { --primary: #4361ee; --secondary: #3f37c9; --success: #4bb543; --error: #f72585; --light: #f8f9fa; --dark: #212529; --gray: #6c757d; --border: #dee2e6; --radius-sm: 4px; --radius-md: 8px; --shadow-sm: 0 1px 3px rgba(0,0,0,0.1); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
         body { background-color: #f5f7fa; color: var(--dark); line-height: 1.6; }
         .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
@@ -18,10 +18,11 @@
         .card { background: white; border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-sm); }
         .form-group { margin-bottom: 1.2rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.95rem; }
-        .form-group input, .form-group select { width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 1rem; transition: var(--transition); }
-        .form-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2); }
-        .payment-btn { width: 100%; padding: 1rem; background-color: var(--primary); color: white; border: none; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition); margin-top: 1rem; }
+        .form-group input, .form-group select { width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: var(--primary); }
+        .payment-btn { width: 100%; padding: 1rem; background-color: var(--primary); color: white; border: none; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 1rem; }
         .payment-btn:hover { background-color: var(--secondary); }
+        .payment-btn:disabled { background-color: var(--gray); cursor: not-allowed; }
         .order-summary { background: white; padding: 1.5rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); position: sticky; top: 1rem; }
         .product-item { display: flex; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
         .product-item img { width: 80px; height: 80px; object-fit: cover; border-radius: var(--radius-sm); }
@@ -130,6 +131,7 @@
             const paymentMethod = document.getElementById('paymentMethodSelect').value;
             
             if (!buyerName || !buyerPhone || !buyerEmail || !paymentMethod) { showToast('Please fill all fields', true); return; }
+            if (!checkoutData.items || checkoutData.items.length === 0) { showToast('Your cart is empty', true); window.location.href = 'products.html'; return; }
             
             const btn = document.getElementById('confirmPaymentBtn');
             const originalText = btn.innerHTML;
@@ -138,24 +140,10 @@
             
             try {
                 const orderNumber = 'ORD' + Date.now();
-                const items = checkoutData.items || [];
-                
-                // CRITICAL: Ensure each item has sellerId
-                const itemsWithSellerId = items.map(item => ({
-                    id: item.id,
-                    name: item.name,
-                    price: item.price,
-                    quantity: item.quantity,
-                    image: item.image,
-                    seller: item.seller,
-                    sellerId: item.sellerId  // This must exist!
-                }));
-                
-                // Get unique seller IDs from items
-                const sellerIds = [...new Set(items.map(item => item.sellerId).filter(id => id))];
+                const itemsWithSellerId = checkoutData.items.map(item => ({ id: item.id, name: item.name, price: item.price, quantity: item.quantity, image: item.image, seller: item.seller, sellerId: item.sellerId || '' }));
+                const sellerIds = [...new Set(itemsWithSellerId.map(item => item.sellerId).filter(id => id))];
                 const mainSellerId = sellerIds.length > 0 ? sellerIds[0] : '';
                 
-                // Get seller payment settings
                 let sellerPaymentSettings = null;
                 if (mainSellerId) {
                     const sellerSettingsDoc = await getDoc(doc(db, "sellerPaymentSettings", mainSellerId));
@@ -188,7 +176,7 @@
                 setTimeout(() => { window.location.href = `order-confirmation.html?orderNumber=${orderNumber}`; }, 2000);
             } catch (error) {
                 console.error("Payment error:", error);
-                showToast('Payment failed. Please try again.', true);
+                showToast('Payment failed: ' + error.message, true);
                 btn.disabled = false;
                 btn.innerHTML = originalText;
             }
