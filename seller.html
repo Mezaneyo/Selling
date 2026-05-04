@@ -8,11 +8,8 @@
     :root {
       --primary: #4361ee;
       --primary-hover: #3a56d4;
-      --secondary: #3f37c9;
-      --accent: #4895ef;
-      --success: #4cc9f0;
-      --warning: #f72585;
       --danger: #ef233c;
+      --success: #10b981;
       --light: #f8f9fa;
       --dark: #212529;
       --gray: #6c757d;
@@ -21,754 +18,140 @@
       --card-bg: white;
       --border-color: #e2e8f0;
       --shadow: 0 4px 6px rgba(0,0,0,0.05);
-      --transition: all 0.3s ease;
     }
     
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; }
     
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      line-height: 1.6;
-    }
+    header { background-color: var(--card-bg); box-shadow: var(--shadow); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+    .nav-brand { font-weight: 700; color: var(--primary); font-size: 1.3rem; }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-link { color: var(--text-color); text-decoration: none; font-weight: 500; }
+    .nav-link:hover { color: var(--primary); }
+    .notification-badge { position: absolute; top: -8px; right: -8px; background: #dc2626; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: none; align-items: center; justify-content: center; }
+    .notification-btn { position: relative; cursor: pointer; }
     
-    header {
-      background-color: var(--card-bg);
-      box-shadow: var(--shadow);
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+    .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+    .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+    .section-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; }
+    .stats-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.8rem 1.5rem; border-radius: 12px; font-weight: 600; }
     
-    .nav-brand {
-      font-weight: 700;
-      color: var(--primary);
-      font-size: 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
+    .card { background-color: var(--card-bg); border-radius: 16px; box-shadow: var(--shadow); padding: 2rem; margin-bottom: 2rem; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+    .form-control { width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border-color); border-radius: 10px; font-size: 1rem; background-color: var(--card-bg); color: var(--text-color); }
+    .form-control:focus { outline: none; border-color: var(--primary); }
+    textarea.form-control { min-height: 120px; resize: vertical; }
     
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-    }
+    .btn { padding: 0.8rem 1.5rem; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; font-size: 1rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+    .btn-primary:hover { transform: translateY(-2px); }
+    .btn-danger { background-color: var(--danger); color: white; }
+    .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+    .btn-success { background-color: var(--success); color: white; }
     
-    .nav-link {
-      color: var(--text-color);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
+    /* Multiple Image Upload */
+    .image-upload-container { display: flex; flex-direction: column; gap: 15px; }
+    .image-input-group { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 10px; }
+    .image-preview img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-top: 10px; }
     
-    .nav-link:hover {
-      color: var(--primary);
-    }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    .product-card { background-color: var(--card-bg); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.2s; }
+    .product-card:hover { transform: translateY(-5px); }
+    .product-image { width: 100%; height: 200px; object-fit: cover; }
+    .product-body { padding: 1rem; }
+    .product-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .product-description { color: var(--gray); font-size: 0.8rem; margin-bottom: 0.5rem; }
+    .product-category { display: inline-block; background-color: var(--border-color); padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.7rem; margin-bottom: 0.5rem; }
+    .product-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; flex-wrap: wrap; gap: 8px; }
+    .product-price { font-weight: 700; color: var(--primary); font-size: 1.1rem; }
+    .product-actions { display: flex; gap: 0.5rem; }
+    .empty-state { text-align: center; padding: 3rem; color: var(--gray); grid-column: 1 / -1; }
     
-    /* Notification Badge */
-    .notification-badge {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background-color: #dc2626;
-      color: white;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      font-size: 0.6rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s ease-in-out infinite; display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
     
-    .notification-btn {
-      position: relative;
-      cursor: pointer;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 2rem;
-    }
-    
-    .dashboard-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-      color: var(--text-color);
-    }
-    
-    .stats-card {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 0.8rem 1.5rem;
-      border-radius: 12px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .card {
-      background-color: var(--card-bg);
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      padding: 2rem;
-      margin-bottom: 2rem;
-    }
-    
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-    
-    .form-label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: var(--text-color);
-    }
-    
-    .form-control {
-      width: 100%;
-      padding: 0.8rem 1rem;
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      font-size: 1rem;
-      transition: var(--transition);
-      background-color: var(--card-bg);
-      color: var(--text-color);
-    }
-    
-    .form-control:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-    }
-    
-    textarea.form-control {
-      min-height: 120px;
-      resize: vertical;
-    }
-    
-    .btn {
-      padding: 0.8rem 1.5rem;
-      border-radius: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      border: none;
-      font-size: 1rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-    
-    .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(102,126,234,0.4);
-    }
-    
-    .btn-danger {
-      background-color: var(--danger);
-      color: white;
-    }
-    
-    .btn-sm {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.8rem;
-    }
-    
-    .btn-success {
-      background-color: #10b981;
-      color: white;
-    }
-    
-    #product-image-preview {
-      max-width: 150px;
-      max-height: 150px;
-      border-radius: 10px;
-      margin-top: 1rem;
-      display: none;
-      object-fit: cover;
-    }
-    
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-    }
-    
-    .product-card {
-      background-color: var(--card-bg);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      transition: transform 0.2s;
-    }
-    
-    .product-card:hover {
-      transform: translateY(-5px);
-    }
-    
-    .product-image {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-    
-    .product-body {
-      padding: 1rem;
-    }
-    
-    .product-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-    }
-    
-    .product-description {
-      color: var(--gray);
-      font-size: 0.8rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    .product-category {
-      display: inline-block;
-      background-color: var(--border-color);
-      padding: 0.2rem 0.6rem;
-      border-radius: 50px;
-      font-size: 0.7rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    .product-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 0.5rem;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    
-    .product-price {
-      font-weight: 700;
-      color: var(--primary);
-      font-size: 1.1rem;
-    }
-    
-    .product-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-    
-    .empty-state {
-      text-align: center;
-      padding: 3rem;
-      color: var(--gray);
-      grid-column: 1 / -1;
-    }
-    
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 1s ease-in-out infinite;
-      display: none;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: var(--primary);
-      color: white;
-      padding: 0.8rem 1.2rem;
-      border-radius: 10px;
-      transform: translateY(100px);
-      opacity: 0;
-      transition: all 0.3s ease;
-      z-index: 1000;
-      font-size: 14px;
-    }
-    
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    
-    .payment-fields {
-      margin-top: 15px;
-      padding: 15px;
-      background: #f8f9fa;
-      border-radius: 10px;
-    }
+    .toast { position: fixed; bottom: 20px; right: 20px; background-color: var(--primary); color: white; padding: 0.8rem 1.2rem; border-radius: 10px; transform: translateY(100px); opacity: 0; transition: all 0.3s ease; z-index: 1000; font-size: 14px; }
+    .toast.show { transform: translateY(0); opacity: 1; }
     
     /* Order List Styles */
-    .orders-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
+    .orders-list { display: flex; flex-direction: column; gap: 1rem; }
+    .order-card { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: all 0.3s; }
+    .order-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .order-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e0e0e0; }
+    .order-number { font-weight: 700; color: #667eea; font-size: 1.1rem; }
+    .order-status { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-processing { background: #e3f2fd; color: #1976d2; }
+    .status-completed { background: #d4edda; color: #155724; }
+    .status-cancelled { background: #f8d7da; color: #721c24; }
+    .order-buyer { margin-bottom: 1rem; }
+    .buyer-name { font-weight: 600; color: #333; }
+    .buyer-contact { font-size: 0.85rem; color: #666; margin-top: 0.25rem; }
+    .order-items { background: #f8f9fa; border-radius: 12px; padding: 1rem; margin: 1rem 0; }
+    .order-item { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e0e0e0; }
+    .order-total { display: flex; justify-content: space-between; margin: 1rem 0; padding-top: 0.5rem; font-weight: 700; border-top: 1px solid #e0e0e0; }
+    .order-actions { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+    .status-select { padding: 0.5rem; border-radius: 8px; border: 1px solid #e0e0e0; background: white; cursor: pointer; }
     
-    .order-card {
-      background: white;
-      border-radius: 16px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      transition: all 0.3s;
-    }
-    
-    .order-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    
-    .order-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 1rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #e0e0e0;
-    }
-    
-    .order-number {
-      font-weight: 700;
-      color: #667eea;
-      font-size: 1.1rem;
-    }
-    
-    .order-status {
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-    
-    .status-pending {
-      background: #fff3cd;
-      color: #856404;
-    }
-    
-    .status-processing {
-      background: #e3f2fd;
-      color: #1976d2;
-    }
-    
-    .status-completed {
-      background: #d4edda;
-      color: #155724;
-    }
-    
-    .status-cancelled {
-      background: #f8d7da;
-      color: #721c24;
-    }
-    
-    .order-buyer {
-      margin-bottom: 1rem;
-    }
-    
-    .buyer-name {
-      font-weight: 600;
-      color: #333;
-    }
-    
-    .buyer-contact {
-      font-size: 0.85rem;
-      color: #666;
-      margin-top: 0.25rem;
-    }
-    
-    .order-items {
-      background: #f8f9fa;
-      border-radius: 12px;
-      padding: 1rem;
-      margin: 1rem 0;
-    }
-    
-    .order-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid #e0e0e0;
-    }
-    
-    .order-item:last-child {
-      border-bottom: none;
-    }
-    
-    .order-total {
-      display: flex;
-      justify-content: space-between;
-      margin: 1rem 0;
-      padding-top: 0.5rem;
-      font-weight: 700;
-      border-top: 1px solid #e0e0e0;
-    }
-    
-    .order-actions {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-      flex-wrap: wrap;
-    }
-    
-    .status-select {
-      padding: 0.5rem;
-      border-radius: 8px;
-      border: 1px solid #e0e0e0;
-      background: white;
-      cursor: pointer;
-    }
-    
-    .btn-small {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.75rem;
-    }
+    .payment-fields { margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 10px; }
     
     /* ========== INBOX MODAL ========== */
-    .inbox-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 2000;
-      align-items: center;
-      justify-content: center;
-    }
+    .inbox-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
+    .inbox-container { background: white; width: 90%; max-width: 500px; height: 80%; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; animation: slideUp 0.3s ease; }
+    .inbox-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .inbox-header h3 { font-size: 18px; }
+    .close-inbox { background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+    .inbox-list { flex: 1; overflow-y: auto; padding: 10px; }
+    .inbox-item { display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid #e0e0e0; cursor: pointer; transition: background 0.2s; }
+    .inbox-item:hover { background: #f8f9fa; }
+    .inbox-avatar { width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; }
+    .inbox-info { flex: 1; }
+    .inbox-name { font-weight: 600; margin-bottom: 5px; }
+    .inbox-last-message { font-size: 13px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .inbox-product { font-size: 11px; color: #667eea; margin-top: 3px; }
+    .inbox-time { font-size: 11px; color: #999; }
+    .inbox-unread { background: #dc2626; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+    .empty-inbox { text-align: center; padding: 40px; color: #999; }
     
-    .inbox-container {
-      background: white;
-      width: 90%;
-      max-width: 500px;
-      height: 80%;
-      border-radius: 20px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      animation: slideUp 0.3s ease;
-    }
+    /* ========== ENHANCED CHAT MODAL ========== */
+    .chat-modal { display: none; position: fixed; bottom: 80px; right: 20px; width: 380px; height: 550px; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 1000; flex-direction: column; overflow: hidden; }
+    .chat-modal-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+    .chat-modal-header h3 { font-size: 16px; }
+    .close-chat { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #f8f9fa; }
+    .chat-message { max-width: 80%; padding: 10px 12px; border-radius: 18px; font-size: 13px; position: relative; }
+    .chat-message.sent { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .chat-message.received { background: white; color: #333; align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .message-sender { font-size: 11px; font-weight: 600; margin-bottom: 4px; opacity: 0.8; }
+    .chat-message.sent .message-sender { text-align: right; }
+    .chat-message-time { font-size: 10px; opacity: 0.7; margin-top: 4px; text-align: right; }
+    .chat-message-image { max-width: 200px; max-height: 150px; border-radius: 10px; cursor: pointer; margin-top: 5px; }
+    .chat-message-audio { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+    .audio-player { max-width: 180px; height: 36px; border-radius: 20px; }
+    .message-actions { display: flex; gap: 8px; margin-top: 5px; font-size: 10px; opacity: 0; transition: opacity 0.2s; justify-content: flex-end; }
+    .chat-message:hover .message-actions { opacity: 1; }
+    .edit-message, .delete-message { background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 5px; font-size: 10px; }
+    .edit-message { color: #667eea; }
+    .delete-message { color: #dc2626; }
+    .typing-indicator { padding: 8px 15px; font-size: 12px; color: #666; font-style: italic; display: flex; align-items: center; gap: 5px; }
+    .typing-dots { display: flex; gap: 3px; }
+    .typing-dots span { width: 5px; height: 5px; background: #667eea; border-radius: 50%; animation: typing 1.4s infinite; }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-5px); opacity: 1; } }
+    .chat-input-container { display: flex; padding: 12px; background: white; border-top: 1px solid #e0e0e0; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .chat-input { flex: 1; padding: 10px; border: 1px solid #e0e0e0; border-radius: 25px; font-size: 13px; resize: none; font-family: inherit; }
+    .attach-image-btn, .attach-audio-btn { background: #f0f0f0; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+    .chat-send { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .chat-toggle-btn { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 50%; color: white; font-size: 24px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; display: flex; align-items: center; justify-content: center; }
     
-    .inbox-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .image-viewer { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 3000; align-items: center; justify-content: center; flex-direction: column; }
+    .image-viewer img { max-width: 90%; max-height: 80%; border-radius: 10px; }
+    .close-viewer { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; }
     
-    .inbox-header h3 {
-      font-size: 18px;
-    }
-    
-    .close-inbox {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 24px;
-      cursor: pointer;
-    }
-    
-    .inbox-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px;
-    }
-    
-    .inbox-item {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      padding: 15px;
-      border-bottom: 1px solid #e0e0e0;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    
-    .inbox-item:hover {
-      background: #f8f9fa;
-    }
-    
-    .inbox-avatar {
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      color: white;
-    }
-    
-    .inbox-info {
-      flex: 1;
-    }
-    
-    .inbox-name {
-      font-weight: 600;
-      margin-bottom: 5px;
-    }
-    
-    .inbox-last-message {
-      font-size: 13px;
-      color: #666;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    
-    .inbox-product {
-      font-size: 11px;
-      color: #667eea;
-      margin-top: 3px;
-    }
-    
-    .inbox-time {
-      font-size: 11px;
-      color: #999;
-    }
-    
-    .inbox-unread {
-      background: #dc2626;
-      color: white;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .empty-inbox {
-      text-align: center;
-      padding: 40px;
-      color: #999;
-    }
-    
-    /* Chat Modal */
-    .chat-modal {
-      display: none;
-      position: fixed;
-      bottom: 80px;
-      right: 20px;
-      width: 350px;
-      height: 500px;
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-      z-index: 1000;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    
-    .chat-modal-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .chat-modal-header h3 {
-      font-size: 16px;
-    }
-    
-    .close-chat {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      background: #f8f9fa;
-    }
-    
-    .chat-message {
-      max-width: 80%;
-      padding: 10px 12px;
-      border-radius: 18px;
-      font-size: 13px;
-    }
-    
-    .chat-message.sent {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
-    }
-    
-    .chat-message.received {
-      background: white;
-      color: #333;
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    }
-    
-    .message-sender {
-      font-size: 11px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      opacity: 0.8;
-    }
-    
-    .chat-message.sent .message-sender {
-      text-align: right;
-    }
-    
-    .chat-message-time {
-      font-size: 10px;
-      opacity: 0.7;
-      margin-top: 4px;
-      text-align: right;
-    }
-    
-    .chat-input-container {
-      display: flex;
-      padding: 12px;
-      background: white;
-      border-top: 1px solid #e0e0e0;
-      gap: 10px;
-    }
-    
-    .chat-input {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #e0e0e0;
-      border-radius: 25px;
-      font-size: 13px;
-      resize: none;
-      font-family: inherit;
-    }
-    
-    .chat-input:focus {
-      outline: none;
-      border-color: #667eea;
-    }
-    
-    .chat-send {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: none;
-      color: white;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-    
-    .chat-toggle-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: none;
-      border-radius: 50%;
-      color: white;
-      font-size: 24px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      z-index: 999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @media (max-width: 768px) {
-      .container {
-        padding: 0 1rem;
-      }
-      
-      header {
-        padding: 0.8rem 1rem;
-      }
-      
-      .products-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .card {
-        padding: 1.5rem;
-      }
-      
-      .chat-modal {
-        width: 100%;
-        height: 100%;
-        bottom: 0;
-        right: 0;
-        border-radius: 0;
-      }
-      
-      .inbox-container {
-        width: 95%;
-        height: 90%;
-      }
-    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) { .container { padding: 0 1rem; } header { padding: 0.8rem 1rem; } .products-grid { grid-template-columns: 1fr; } .card { padding: 1.5rem; } .chat-modal { width: 100%; height: 100%; bottom: 0; right: 0; border-radius: 0; } .inbox-container { width: 95%; height: 90%; } }
   </style>
 </head>
 <body>
@@ -776,10 +159,7 @@
     <div class="nav-brand">🛒 Msika Marketplace</div>
     <div class="nav-links">
       <a href="buyer.html" class="nav-link">🛍️ Shop</a>
-      <div class="nav-link notification-btn" id="inboxBtn">
-        💬 Messages
-        <span class="notification-badge" id="inboxBadge" style="display: none;">0</span>
-      </div>
+      <div class="nav-link notification-btn" id="inboxBtn">💬 Messages <span class="notification-badge" id="inboxBadge">0</span></div>
       <a href="#" class="nav-link" onclick="logout()">🚪 Logout</a>
     </div>
   </header>
@@ -794,163 +174,66 @@
     <div class="card">
       <h2 class="section-title">➕ Add New Product</h2>
       <form id="product-form">
-        <div class="form-group">
-          <label class="form-label">Product Name *</label>
-          <input type="text" id="product-name" class="form-control" required>
+        <div class="form-group"><label class="form-label">Product Name *</label><input type="text" id="product-name" class="form-control" required></div>
+        <div class="form-group"><label class="form-label">Price (MWK) *</label><input type="number" id="product-price" class="form-control" step="100" min="0" required></div>
+        <div class="form-group"><label class="form-label">Category *</label><select id="product-category" class="form-control" required><option value="">Select Category</option><option value="Electronics">📱 Electronics</option><option value="Fashion">👕 Fashion</option><option value="Home">🏠 Home</option><option value="Sports">⚽ Sports</option><option value="Other">📦 Other</option></select></div>
+        <div class="form-group"><label class="form-label">Description</label><textarea id="product-description" class="form-control" rows="3"></textarea></div>
+        <div class="form-group"><label class="form-label">Product Images * (Up to 5 images)</label>
+          <div class="image-upload-container" id="imageInputs">
+            <div class="image-input-group"><input type="file" class="form-control product-image-input" accept="image/*" onchange="previewImage(this, 0)"><div class="image-preview" id="preview-0"></div></div>
+          </div>
+          <button type="button" class="btn btn-sm" id="addMoreImagesBtn" style="margin-top: 10px;">+ Add Another Image</button>
         </div>
-        
-        <div class="form-group">
-          <label class="form-label">Price (MWK) *</label>
-          <input type="number" id="product-price" class="form-control" step="100" min="0" required>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Category *</label>
-          <select id="product-category" class="form-control" required>
-            <option value="">Select Category</option>
-            <option value="Electronics">📱 Electronics</option>
-            <option value="Fashion">👕 Fashion</option>
-            <option value="Home">🏠 Home</option>
-            <option value="Sports">⚽ Sports</option>
-            <option value="Other">📦 Other</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Description</label>
-          <textarea id="product-description" class="form-control" rows="3"></textarea>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Product Image *</label>
-          <input type="file" id="product-image" class="form-control" accept="image/*" required>
-          <img id="product-image-preview" alt="Preview">
-        </div>
-        
-        <button type="submit" class="btn btn-primary" id="submit-btn">
-          <span class="btn-text">Add Product</span>
-          <div class="spinner" id="spinner"></div>
-        </button>
+        <button type="submit" class="btn btn-primary" id="submit-btn"><span class="btn-text">Add Product</span><div class="spinner" id="spinner"></div></button>
       </form>
     </div>
 
     <!-- Payment Settings Card -->
     <div class="card">
       <h2 class="section-title">💰 Payment Settings</h2>
-      <p style="color: #666; margin-bottom: 15px;">Set up how you want to receive payments from buyers. These details will appear on the buyer's receipt.</p>
-      
+      <p style="color: #666; margin-bottom: 15px;">Set up how you want to receive payments from buyers.</p>
       <form id="paymentSettingsForm">
-        <div class="form-group">
-          <label class="form-label">Payment Method *</label>
-          <select id="paymentMethod" class="form-control" required>
-            <option value="">Select Payment Method</option>
-            <option value="mpamba">Mpamba (TNM)</option>
-            <option value="airtel">Airtel Money</option>
-            <option value="bank">Bank Transfer</option>
-          </select>
-        </div>
-        
-        <div id="mpambaFields" class="payment-fields" style="display: none;">
-          <div class="form-group">
-            <label class="form-label">Mpamba Phone Number *</label>
-            <input type="tel" id="mpambaNumber" class="form-control" placeholder="0881 234 567">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Account Name *</label>
-            <input type="text" id="mpambaName" class="form-control" placeholder="Your full name">
-          </div>
-        </div>
-        
-        <div id="airtelFields" class="payment-fields" style="display: none;">
-          <div class="form-group">
-            <label class="form-label">Airtel Money Number *</label>
-            <input type="tel" id="airtelNumber" class="form-control" placeholder="0991 234 567">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Account Name *</label>
-            <input type="text" id="airtelName" class="form-control" placeholder="Your full name">
-          </div>
-        </div>
-        
-        <div id="bankFields" class="payment-fields" style="display: none;">
-          <div class="form-group">
-            <label class="form-label">Bank Name *</label>
-            <select id="bankName" class="form-control">
-              <option value="">Select Bank</option>
-              <option value="National Bank of Malawi">National Bank of Malawi</option>
-              <option value="Standard Bank">Standard Bank</option>
-              <option value="FDH Bank">FDH Bank</option>
-              <option value="NBS Bank">NBS Bank</option>
-              <option value="Opportunity Bank">Opportunity Bank</option>
-              <option value="MyBucks">MyBucks</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Account Number *</label>
-            <input type="text" id="bankAccountNumber" class="form-control" placeholder="Your account number">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Account Name *</label>
-            <input type="text" id="bankAccountName" class="form-control" placeholder="Account holder name">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Branch *</label>
-            <input type="text" id="bankBranch" class="form-control" placeholder="Branch name">
-          </div>
-        </div>
-        
+        <div class="form-group"><label class="form-label">Payment Method *</label><select id="paymentMethod" class="form-control" required><option value="">Select Payment Method</option><option value="mpamba">Mpamba (TNM)</option><option value="airtel">Airtel Money</option><option value="bank">Bank Transfer</option></select></div>
+        <div id="mpambaFields" class="payment-fields" style="display: none;"><div class="form-group"><label class="form-label">Mpamba Phone Number *</label><input type="tel" id="mpambaNumber" class="form-control" placeholder="0881 234 567"></div><div class="form-group"><label class="form-label">Account Name *</label><input type="text" id="mpambaName" class="form-control" placeholder="Your full name"></div></div>
+        <div id="airtelFields" class="payment-fields" style="display: none;"><div class="form-group"><label class="form-label">Airtel Money Number *</label><input type="tel" id="airtelNumber" class="form-control" placeholder="0991 234 567"></div><div class="form-group"><label class="form-label">Account Name *</label><input type="text" id="airtelName" class="form-control" placeholder="Your full name"></div></div>
+        <div id="bankFields" class="payment-fields" style="display: none;"><div class="form-group"><label class="form-label">Bank Name *</label><select id="bankName" class="form-control"><option value="">Select Bank</option><option value="National Bank of Malawi">National Bank of Malawi</option><option value="Standard Bank">Standard Bank</option><option value="FDH Bank">FDH Bank</option><option value="NBS Bank">NBS Bank</option><option value="Opportunity Bank">Opportunity Bank</option><option value="MyBucks">MyBucks</option></select></div><div class="form-group"><label class="form-label">Account Number *</label><input type="text" id="bankAccountNumber" class="form-control" placeholder="Your account number"></div><div class="form-group"><label class="form-label">Account Name *</label><input type="text" id="bankAccountName" class="form-control" placeholder="Account holder name"></div><div class="form-group"><label class="form-label">Branch *</label><input type="text" id="bankBranch" class="form-control" placeholder="Branch name"></div></div>
         <button type="submit" class="btn btn-primary">Save Payment Settings</button>
       </form>
-      
       <div id="paymentSettingsStatus" style="margin-top: 15px;"></div>
     </div>
 
     <!-- Products Section -->
     <h2 class="section-title">📋 Your Products</h2>
-    <div class="products-grid" id="products-container">
-      <div class="empty-state">Loading products...</div>
-    </div>
+    <div class="products-grid" id="products-container"><div class="empty-state">Loading products...</div></div>
 
-    <!-- Orders Section - Orders from Buyers -->
-    <div style="margin-top: 2rem;">
-      <h2 class="section-title">📦 Orders from Buyers</h2>
-      <div id="orders-container" class="orders-list">
-        <div class="empty-state">Loading orders...</div>
-      </div>
-    </div>
+    <!-- Orders Section -->
+    <div style="margin-top: 2rem;"><h2 class="section-title">📦 Orders from Buyers</h2><div id="orders-container" class="orders-list"><div class="empty-state">Loading orders...</div></div></div>
   </div>
 
   <div class="toast" id="toast"><span id="toast-message"></span></div>
 
-  <!-- INBOX MODAL - All Customer Messages -->
+  <!-- INBOX MODAL -->
   <div class="inbox-modal" id="inboxModal">
-    <div class="inbox-container">
-      <div class="inbox-header">
-        <h3>💬 Customer Conversations</h3>
-        <button class="close-inbox" id="closeInboxBtn">✕</button>
-      </div>
-      <div class="inbox-list" id="inboxList">
-        <div style="text-align: center; padding: 20px;">Loading conversations...</div>
-      </div>
-    </div>
+    <div class="inbox-container"><div class="inbox-header"><h3>💬 Customer Conversations</h3><button class="close-inbox" id="closeInboxBtn">✕</button></div><div class="inbox-list" id="inboxList"><div style="text-align: center; padding: 20px;">Loading conversations...</div></div></div>
   </div>
 
-  <!-- Chat Modal -->
+  <!-- ENHANCED CHAT MODAL WITH VOICE NOTES -->
   <div class="chat-modal" id="chatModal">
-    <div class="chat-modal-header">
-      <h3 id="chatWithName">Loading...</h3>
-      <button class="close-chat" id="closeChatBtn">✕</button>
-    </div>
-    <div class="chat-messages" id="chatMessages">
-      <div style="text-align: center; padding: 20px;">Loading messages...</div>
-    </div>
+    <div class="chat-modal-header"><h3 id="chatWithName">Loading...</h3><button class="close-chat" id="closeChatBtn">✕</button></div>
+    <div class="chat-messages" id="chatMessages"><div style="text-align: center; padding: 20px;">Select a conversation</div></div>
+    <div id="typingIndicator" class="typing-indicator" style="display: none;"></div>
     <div class="chat-input-container">
+      <button class="attach-image-btn" id="attachImageBtn" title="Send Image">📷</button>
+      <button class="attach-audio-btn" id="attachAudioBtn" title="Send Voice Note">🎤</button>
       <textarea class="chat-input" id="chatInput" placeholder="Type a message..." rows="1"></textarea>
       <button class="chat-send" id="sendChatBtn">📤</button>
     </div>
   </div>
 
   <button class="chat-toggle-btn" id="chatToggleBtn">💬</button>
+
+  <!-- Image Viewer -->
+  <div class="image-viewer" id="imageViewer" onclick="this.style.display='none'"><span class="close-viewer" onclick="this.parentElement.style.display='none'">×</span><img id="viewerImage" src=""></div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
@@ -975,22 +258,14 @@
     let currentChatId = null;
     let currentChatBuyerId = null;
     let unsubscribeMessages = null;
+    let typingListenerUnsubscribe = null;
+    let typingTimeoutHandler = null;
+    let isTyping = false;
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let isRecording = false;
     let userNameCache = {};
-    
-    // DOM Elements
-    const inboxModal = document.getElementById('inboxModal');
-    const inboxBtn = document.getElementById('inboxBtn');
-    const closeInboxBtn = document.getElementById('closeInboxBtn');
-    const inboxList = document.getElementById('inboxList');
-    const inboxBadge = document.getElementById('inboxBadge');
-    
-    const chatModal = document.getElementById('chatModal');
-    const chatToggleBtn = document.getElementById('chatToggleBtn');
-    const closeChatBtn = document.getElementById('closeChatBtn');
-    const chatMessages = document.getElementById('chatMessages');
-    const chatInput = document.getElementById('chatInput');
-    const sendChatBtn = document.getElementById('sendChatBtn');
-    const chatWithName = document.getElementById('chatWithName');
+    let imageFiles = [];
     
     function formatMWK(amount) { return 'MK ' + amount.toLocaleString(); }
     function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
@@ -1015,159 +290,94 @@
       } catch (error) { return 'User'; }
     }
     
-    // ========== INBOX FUNCTIONS ==========
-    async function loadInbox() {
-      if (!currentUser) return;
-      
-      const chatsRef = collection(db, "chats");
-      const q = query(chatsRef, where("participants", "array-contains", currentUser.uid));
-      const snapshot = await getDocs(q);
-      
-      if (snapshot.empty) {
-        inboxList.innerHTML = '<div class="empty-inbox">💬 No conversations yet. When customers message you, they will appear here.</div>';
-        inboxBadge.style.display = 'none';
-        return;
-      }
-      
-      let conversations = [];
-      let totalUnread = 0;
-      
-      for (const docSnap of snapshot.docs) {
-        const chat = { id: docSnap.id, ...docSnap.data() };
-        const otherId = chat.participants.find(p => p !== currentUser.uid);
-        const customerName = await getUserName(otherId);
-        
-        const messagesRef = collection(db, "chats", chat.id, "messages");
-        const unreadQuery = query(messagesRef, where("read", "==", false), where("senderId", "!=", currentUser.uid));
-        const unreadSnap = await getDocs(unreadQuery);
-        const unreadCount = unreadSnap.size;
-        totalUnread += unreadCount;
-        
-        conversations.push({
-          id: chat.id,
-          customerId: otherId,
-          customerName: customerName,
-          productName: chat.productName || 'Product',
-          lastMessage: chat.lastMessage || 'No messages yet',
-          lastMessageTime: chat.lastMessageTime,
-          unreadCount: unreadCount
-        });
-      }
-      
-      conversations.sort((a, b) => {
-        const timeA = a.lastMessageTime?.toDate ? a.lastMessageTime.toDate() : new Date(0);
-        const timeB = b.lastMessageTime?.toDate ? b.lastMessageTime.toDate() : new Date(0);
-        return timeB - timeA;
-      });
-      
-      if (totalUnread > 0) {
-        inboxBadge.style.display = 'flex';
-        inboxBadge.textContent = totalUnread > 99 ? '99+' : totalUnread;
-      } else {
-        inboxBadge.style.display = 'none';
-      }
-      
-      inboxList.innerHTML = conversations.map(conv => `
-        <div class="inbox-item" data-chat-id="${conv.id}" data-customer-id="${conv.customerId}" data-customer-name="${conv.customerName}" data-product-name="${conv.productName}">
-          <div class="inbox-avatar">👤</div>
-          <div class="inbox-info">
-            <div class="inbox-name">${escapeHtml(conv.customerName)}</div>
-            <div class="inbox-last-message">${escapeHtml(conv.lastMessage)}</div>
-            <div class="inbox-product">Re: ${escapeHtml(conv.productName)}</div>
-          </div>
-          <div class="inbox-time">${formatTime(conv.lastMessageTime)}</div>
-          ${conv.unreadCount > 0 ? `<div class="inbox-unread">${conv.unreadCount}</div>` : ''}
-        </div>
-      `).join('');
-      
-      document.querySelectorAll('.inbox-item').forEach(item => {
-        item.addEventListener('click', () => {
-          const chatId = item.dataset.chatId;
-          const customerName = item.dataset.customerName;
-          const productName = item.dataset.productName;
-          openChat(chatId, customerName, productName);
-          inboxModal.style.display = 'none';
-        });
-      });
-    }
-    
-    // ========== CHAT FUNCTIONS ==========
-    async function openChat(chatId, customerName, productName) {
-      if (unsubscribeMessages) unsubscribeMessages();
-      
-      currentChatId = chatId;
-      chatWithName.innerHTML = `${escapeHtml(customerName)}<br><small style="font-size: 11px;">${escapeHtml(productName)}</small>`;
-      chatMessages.innerHTML = '<div style="text-align: center; padding: 20px;">Loading messages...</div>';
-      
-      const messagesRef = collection(db, "chats", chatId, "messages");
-      const q = query(messagesRef, orderBy("timestamp", "asc"));
-      
-      unsubscribeMessages = onSnapshot(q, async (snapshot) => {
-        if (snapshot.empty) {
-          chatMessages.innerHTML = '<div style="text-align: center; padding: 20px;">No messages yet. Start the conversation!</div>';
-          return;
-        }
-        
-        let html = '';
-        for (const docSnap of snapshot.docs) {
-          const msg = docSnap.data();
-          const isSent = msg.senderId === currentUser.uid;
-          const senderName = isSent ? 'You' : customerName;
-          html += `
-            <div class="chat-message ${isSent ? 'sent' : 'received'}">
-              <div class="message-sender">${escapeHtml(senderName)}</div>
-              ${escapeHtml(msg.text)}
-              <div class="chat-message-time">${formatTime(msg.timestamp)}</div>
-            </div>
-          `;
-        }
-        chatMessages.innerHTML = html;
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      });
-      
-      const unreadQuery = query(messagesRef, where("read", "==", false), where("senderId", "!=", currentUser.uid));
-      const unreadMsgs = await getDocs(unreadQuery);
-      for (const msg of unreadMsgs.docs) {
-        await updateDoc(doc(db, "chats", chatId, "messages", msg.id), { read: true });
-      }
-      await loadInbox();
-      
-      chatModal.style.display = 'flex';
-      chatInput.focus();
-    }
-    
-    async function sendChatMessage() {
-      const text = chatInput.value.trim();
-      if (!text || !currentChatId) return;
-      
-      await addDoc(collection(db, "chats", currentChatId, "messages"), {
-        senderId: currentUser.uid,
-        text: text,
-        timestamp: new Date(),
-        read: false
-      });
-      
-      await updateDoc(doc(db, "chats", currentChatId), {
-        lastMessage: text,
-        lastMessageTime: new Date()
-      });
-      
-      chatInput.value = '';
-      await loadInbox();
-    }
-    
-    // ========== PRODUCT FUNCTIONS ==========
-    async function uploadImageToImgBB(file) {
-      const formData = new FormData();
-      formData.append('image', file);
+    async function uploadToImgBB(file) {
+      const formData = new FormData(); formData.append('image', file);
       try {
         const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
         const data = await response.json();
         if (data.success) return data.data.url;
-        throw new Error(data.error?.message || 'Upload failed');
+        throw new Error('Upload failed');
       } catch (error) { throw error; }
     }
     
+    // ========== VOICE RECORDING FUNCTIONS ==========
+    async function startRecording() {
+      audioChunks = [];
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = (event) => { audioChunks.push(event.data); };
+        mediaRecorder.onstop = async () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const audioUrl = await uploadToImgBB(audioBlob);
+          if (audioUrl && currentChatId) {
+            await addDoc(collection(db, "chats", currentChatId, "messages"), {
+              senderId: currentUser.uid, text: '🎤 Voice note', audioUrl: audioUrl, timestamp: new Date(), read: false, edited: false, deleted: false
+            });
+            await updateDoc(doc(db, "chats", currentChatId), { lastMessage: '🎤 Voice note', lastMessageTime: new Date() });
+            showToast('Voice note sent!');
+          }
+          stream.getTracks().forEach(track => track.stop());
+        };
+        mediaRecorder.start();
+        isRecording = true;
+        document.getElementById('attachAudioBtn').style.backgroundColor = '#dc2626';
+        document.getElementById('attachAudioBtn').innerHTML = '⏹️';
+        showToast('Recording... Click again to stop');
+      } catch (error) {
+        console.error("Microphone error:", error);
+        showToast('Microphone access denied. Please allow microphone permissions.', true);
+      }
+    }
+    
+    function stopRecording() {
+      if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        document.getElementById('attachAudioBtn').style.backgroundColor = '#f0f0f0';
+        document.getElementById('attachAudioBtn').innerHTML = '🎤';
+      }
+    }
+    
+    // ========== MULTIPLE IMAGE FUNCTIONS ==========
+    window.previewImage = function(input, index) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const previewDiv = document.getElementById(`preview-${index}`);
+          if (previewDiv) previewDiv.innerHTML = `<img src="${e.target.result}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-top: 10px;">`;
+          imageFiles[index] = input.files[0];
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    };
+    
+    function addImageInput() {
+      if (imageFiles.length >= 5) { showToast('Maximum 5 images allowed', true); return; }
+      const newIndex = imageFiles.length;
+      const container = document.getElementById('imageInputs');
+      const newInput = document.createElement('div');
+      newInput.className = 'image-input-group';
+      newInput.innerHTML = `<input type="file" class="form-control product-image-input" accept="image/*" onchange="previewImage(this, ${newIndex})"><div class="image-preview" id="preview-${newIndex}"></div><button type="button" class="btn btn-sm btn-danger" onclick="removeImageInput(${newIndex})" style="margin-top: 5px;">Remove</button>`;
+      container.appendChild(newInput);
+      imageFiles.push(null);
+    }
+    
+    window.removeImageInput = function(index) {
+      if (imageFiles[index]) imageFiles[index] = null;
+      const inputs = document.querySelectorAll('.image-input-group');
+      if (inputs[index]) inputs[index].remove();
+      imageFiles.splice(index, 1);
+    };
+    
+    document.getElementById('addMoreImagesBtn').addEventListener('click', addImageInput);
+    document.getElementById('attachAudioBtn').addEventListener('click', () => {
+      if (!currentChatId) { showToast('Open a chat first', true); return; }
+      if (isRecording) { stopRecording(); }
+      else { startRecording(); }
+    });
+    
+    // ========== PRODUCT FUNCTIONS ==========
     async function loadProducts() {
       if (!currentUser) return;
       try {
@@ -1177,26 +387,31 @@
         document.getElementById('product-count').textContent = products.length;
         const container = document.getElementById('products-container');
         if (products.length === 0) { container.innerHTML = '<div class="empty-state">📦 No products yet. Add your first product above!</div>'; return; }
-        container.innerHTML = products.map(product => `
-          <div class="product-card">
-            <img src="${product.imageUrl}" class="product-image" alt="${product.name}" onerror="this.src='https://placehold.co/400x300'">
-            <div class="product-body">
-              <span class="product-category">${product.category}</span>
-              <h3 class="product-title">${escapeHtml(product.name)}</h3>
-              <p class="product-description">${escapeHtml(product.description || 'No description')}</p>
-              <div class="product-footer">
-                <div class="product-price">${formatMWK(product.price)}</div>
-                <div class="product-actions">
-                  <button class="btn btn-sm btn-danger" onclick="deleteProduct('${product.id}')">🗑️ Delete</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        `).join('');
+        container.innerHTML = products.map(product => `<div class="product-card"><img src="${product.mainImage || product.imageUrls?.[0] || 'https://placehold.co/400x300'}" class="product-image" onerror="this.src='https://placehold.co/400x300'"><div class="product-body"><span class="product-category">${product.category}</span><h3 class="product-title">${escapeHtml(product.name)}</h3><p class="product-description">${escapeHtml(product.description || 'No description')}</p><div class="product-footer"><div class="product-price">${formatMWK(product.price)}</div><div class="product-actions"><button class="btn btn-sm btn-danger" onclick="deleteProduct('${product.id}')">🗑️ Delete</button></div></div></div></div>`).join('');
       } catch (error) { showToast('Error loading products', true); }
     }
     
     window.deleteProduct = async (productId) => { if (confirm('Delete this product?')) { await deleteDoc(doc(db, "products", productId)); showToast('Product deleted!'); loadProducts(); } };
+    
+    // Add Product Form
+    document.getElementById('product-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('product-name').value.trim();
+      const price = parseFloat(document.getElementById('product-price').value);
+      const category = document.getElementById('product-category').value;
+      const description = document.getElementById('product-description').value.trim();
+      const validFiles = imageFiles.filter(f => f !== null);
+      if (!name || !price || !category || validFiles.length === 0) { showToast('Please fill all required fields and add at least one image', true); return; }
+      const submitBtn = document.getElementById('submit-btn'); const btnText = document.querySelector('.btn-text'); const spinner = document.getElementById('spinner');
+      submitBtn.disabled = true; btnText.textContent = 'Uploading Images...'; spinner.style.display = 'block';
+      try {
+        const imageUrls = []; for (const file of validFiles) { const url = await uploadToImgBB(file); imageUrls.push(url); }
+        await addDoc(collection(db, "products"), { name, price, category, description: description || '', imageUrls: imageUrls, mainImage: imageUrls[0], sellerId: currentUser.uid, sellerName: currentUser.displayName || 'Seller', createdAt: new Date() });
+        document.getElementById('product-form').reset(); imageFiles = [];
+        document.getElementById('imageInputs').innerHTML = `<div class="image-input-group"><input type="file" class="form-control product-image-input" accept="image/*" onchange="previewImage(this, 0)"><div class="image-preview" id="preview-0"></div></div>`;
+        showToast('Product added successfully!'); loadProducts();
+      } catch (error) { showToast('Failed to add product: ' + error.message, true); } finally { submitBtn.disabled = false; btnText.textContent = 'Add Product'; spinner.style.display = 'none'; }
+    });
     
     // ========== ORDER MANAGEMENT ==========
     async function loadSellerOrders() {
@@ -1234,22 +449,141 @@
     document.getElementById('paymentMethod').addEventListener('change', (e) => togglePaymentFields(e.target.value));
     document.getElementById('paymentSettingsForm').addEventListener('submit', async (e) => { e.preventDefault(); const method = document.getElementById('paymentMethod').value; if (!method) { showToast('Please select a payment method', true); return; } let settings = { method: method, updatedAt: new Date() }; if (method === 'mpamba') { const mobileNumber = document.getElementById('mpambaNumber').value; const accountName = document.getElementById('mpambaName').value; if (!mobileNumber || !accountName) { showToast('Please fill all Mpamba details', true); return; } settings.mobileNumber = mobileNumber; settings.accountName = accountName; settings.provider = 'TNM Mpamba'; } else if (method === 'airtel') { const mobileNumber = document.getElementById('airtelNumber').value; const accountName = document.getElementById('airtelName').value; if (!mobileNumber || !accountName) { showToast('Please fill all Airtel details', true); return; } settings.mobileNumber = mobileNumber; settings.accountName = accountName; settings.provider = 'Airtel Money'; } else if (method === 'bank') { const bankName = document.getElementById('bankName').value; const accountNumber = document.getElementById('bankAccountNumber').value; const accountName = document.getElementById('bankAccountName').value; const branch = document.getElementById('bankBranch').value; if (!bankName || !accountNumber || !accountName || !branch) { showToast('Please fill all bank details', true); return; } settings.bankName = bankName; settings.accountNumber = accountNumber; settings.accountName = accountName; settings.branch = branch; } try { await setDoc(doc(db, "sellerPaymentSettings", currentUser.uid), settings); showToast('✅ Payment settings saved successfully!'); } catch (error) { showToast('❌ Error saving settings', true); } });
     
-    // Image preview
-    document.getElementById('product-image').addEventListener('change', function(e) { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { document.getElementById('product-image-preview').src = event.target.result; document.getElementById('product-image-preview').style.display = 'block'; }; reader.readAsDataURL(file); } });
+    // ========== INBOX FUNCTIONS ==========
+    async function loadInbox() {
+      if (!currentUser) return;
+      const chatsRef = collection(db, "chats");
+      const q = query(chatsRef, where("participants", "array-contains", currentUser.uid));
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) { document.getElementById('inboxList').innerHTML = '<div class="empty-inbox">💬 No conversations yet. When customers message you, they will appear here.</div>'; document.getElementById('inboxBadge').style.display = 'none'; return; }
+      let conversations = []; let totalUnread = 0;
+      for (const docSnap of snapshot.docs) {
+        const chat = { id: docSnap.id, ...docSnap.data() };
+        const otherId = chat.participants.find(p => p !== currentUser.uid);
+        const customerName = await getUserName(otherId);
+        const messagesRef = collection(db, "chats", chat.id, "messages");
+        const unreadQuery = query(messagesRef, where("read", "==", false), where("senderId", "!=", currentUser.uid));
+        const unreadSnap = await getDocs(unreadQuery);
+        totalUnread += unreadSnap.size;
+        conversations.push({ id: chat.id, customerId: otherId, customerName: customerName, productName: chat.productName || 'Product', lastMessage: chat.lastMessage || 'No messages yet', lastMessageTime: chat.lastMessageTime, unreadCount: unreadSnap.size });
+      }
+      conversations.sort((a, b) => { const timeA = a.lastMessageTime?.toDate ? a.lastMessageTime.toDate() : new Date(0); const timeB = b.lastMessageTime?.toDate ? b.lastMessageTime.toDate() : new Date(0); return timeB - timeA; });
+      if (totalUnread > 0) { document.getElementById('inboxBadge').style.display = 'flex'; document.getElementById('inboxBadge').textContent = totalUnread > 99 ? '99+' : totalUnread; } else { document.getElementById('inboxBadge').style.display = 'none'; }
+      document.getElementById('inboxList').innerHTML = conversations.map(conv => `<div class="inbox-item" data-chat-id="${conv.id}" data-customer-name="${conv.customerName}" data-product-name="${conv.productName}"><div class="inbox-avatar">👤</div><div class="inbox-info"><div class="inbox-name">${escapeHtml(conv.customerName)}</div><div class="inbox-last-message">${escapeHtml(conv.lastMessage)}</div><div class="inbox-product">Re: ${escapeHtml(conv.productName)}</div></div><div class="inbox-time">${formatTime(conv.lastMessageTime)}</div>${conv.unreadCount > 0 ? `<div class="inbox-unread">${conv.unreadCount}</div>` : ''}</div>`).join('');
+      document.querySelectorAll('.inbox-item').forEach(item => { item.addEventListener('click', () => { openChat(item.dataset.chatId, item.dataset.customerName, item.dataset.productName); document.getElementById('inboxModal').style.display = 'none'; }); });
+    }
     
-    // Add product form
-    document.getElementById('product-form').addEventListener('submit', async function(e) { e.preventDefault(); const name = document.getElementById('product-name').value.trim(); const price = parseFloat(document.getElementById('product-price').value); const category = document.getElementById('product-category').value; const description = document.getElementById('product-description').value.trim(); const imageFile = document.getElementById('product-image').files[0]; if (!name || !price || !category || !imageFile) { showToast('Please fill all required fields', true); return; } const submitBtn = document.getElementById('submit-btn'); const btnText = document.querySelector('.btn-text'); const spinner = document.getElementById('spinner'); submitBtn.disabled = true; btnText.textContent = 'Uploading...'; spinner.style.display = 'block'; try { const imageUrl = await uploadImageToImgBB(imageFile); await addDoc(collection(db, "products"), { name, price, category, description: description || '', imageUrl, sellerId: currentUser.uid, sellerName: currentUser.displayName || 'Seller', createdAt: new Date() }); document.getElementById('product-form').reset(); document.getElementById('product-image-preview').style.display = 'none'; showToast('Product added successfully!'); loadProducts(); } catch (error) { showToast('Failed to add product: ' + error.message, true); } finally { submitBtn.disabled = false; btnText.textContent = 'Add Product'; spinner.style.display = 'none'; } });
+    // ========== ENHANCED CHAT FUNCTIONS ==========
+    async function sendTypingIndicator(chatId, typing) {
+      if (!chatId) return;
+      try { await updateDoc(doc(db, "chats", chatId), { [`typing_${currentUser.uid}`]: typing, lastTypingUpdate: new Date() }); } catch (error) {}
+    }
     
-    // Chat event listeners
-    sendChatBtn.addEventListener('click', sendChatMessage);
-    chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); } });
-    closeChatBtn.addEventListener('click', () => { chatModal.style.display = 'none'; if (unsubscribeMessages) unsubscribeMessages(); });
-    chatToggleBtn.addEventListener('click', () => { chatModal.style.display = chatModal.style.display === 'flex' ? 'none' : 'flex'; });
+    function listenForTyping(chatId, otherPersonName) {
+      if (typingListenerUnsubscribe) typingListenerUnsubscribe();
+      const chatRef = doc(db, "chats", chatId);
+      typingListenerUnsubscribe = onSnapshot(chatRef, (docSnap) => {
+        const data = docSnap.data();
+        const isOtherTyping = data ? data[`typing_${currentChatBuyerId}`] : false;
+        const typingDiv = document.getElementById('typingIndicator');
+        if (typingDiv) {
+          if (isOtherTyping) { typingDiv.innerHTML = `<div class="typing-indicator"><span>${otherPersonName} is typing</span><div class="typing-dots"><span></span><span></span><span></span></div></div>`; typingDiv.style.display = 'block'; }
+          else { typingDiv.style.display = 'none'; }
+        }
+      });
+    }
     
-    // Inbox event listeners
-    inboxBtn.addEventListener('click', () => { loadInbox(); inboxModal.style.display = 'flex'; });
-    closeInboxBtn.addEventListener('click', () => { inboxModal.style.display = 'none'; });
-    window.addEventListener('click', (e) => { if (e.target === inboxModal) inboxModal.style.display = 'none'; });
+    window.viewImage = (imageUrl) => { document.getElementById('viewerImage').src = imageUrl; document.getElementById('imageViewer').style.display = 'flex'; };
+    
+    window.editMessagePrompt = async (messageId, currentText) => {
+      const newText = prompt('Edit your message:', currentText);
+      if (newText && newText.trim() !== currentText) {
+        await updateDoc(doc(db, "chats", currentChatId, "messages", messageId), { text: newText.trim(), edited: true, editedAt: new Date() });
+        showToast('Message edited');
+      }
+    };
+    
+    window.deleteMessage = async (messageId) => {
+      if (confirm('Delete this message?')) {
+        await updateDoc(doc(db, "chats", currentChatId, "messages", messageId), { text: '[Message deleted]', deleted: true });
+        showToast('Message deleted');
+      }
+    };
+    
+    document.getElementById('attachImageBtn').addEventListener('click', () => {
+      if (!currentChatId) { showToast('Open a chat first', true); return; }
+      const fileInput = document.createElement('input'); fileInput.type = 'file'; fileInput.accept = 'image/*';
+      fileInput.onchange = async (e) => {
+        if (e.target.files[0]) {
+          showToast('Uploading image...');
+          const imageUrl = await uploadToImgBB(e.target.files[0]);
+          await addDoc(collection(db, "chats", currentChatId, "messages"), { senderId: currentUser.uid, text: '📷 Image', imageUrl: imageUrl, timestamp: new Date(), read: false, edited: false, deleted: false });
+          await updateDoc(doc(db, "chats", currentChatId), { lastMessage: '📷 Image', lastMessageTime: new Date() });
+          showToast('Image sent!');
+        }
+      };
+      fileInput.click();
+    });
+    
+    async function sendChatMessage() {
+      const text = document.getElementById('chatInput').value.trim();
+      if (!text && !currentChatId) return;
+      await addDoc(collection(db, "chats", currentChatId, "messages"), { senderId: currentUser.uid, text: text, timestamp: new Date(), read: false, edited: false, deleted: false });
+      await updateDoc(doc(db, "chats", currentChatId), { lastMessage: text, lastMessageTime: new Date() });
+      document.getElementById('chatInput').value = '';
+      sendTypingIndicator(currentChatId, false);
+    }
+    
+    async function openChat(chatId, customerName, productName) {
+      if (unsubscribeMessages) unsubscribeMessages();
+      currentChatId = chatId;
+      currentChatBuyerId = (await getDoc(doc(db, "chats", chatId))).data().participants.find(p => p !== currentUser.uid);
+      document.getElementById('chatWithName').innerHTML = `${escapeHtml(customerName)}<br><small style="font-size: 11px;">${escapeHtml(productName)}</small>`;
+      document.getElementById('chatMessages').innerHTML = '<div style="text-align: center; padding: 20px;">Loading messages...</div>';
+      const messagesRef = collection(db, "chats", chatId, "messages");
+      const q = query(messagesRef, orderBy("timestamp", "asc"));
+      unsubscribeMessages = onSnapshot(q, (snapshot) => {
+        if (snapshot.empty) { document.getElementById('chatMessages').innerHTML = '<div style="text-align: center; padding: 20px;">No messages yet. Start the conversation!</div>'; return; }
+        let html = '';
+        snapshot.forEach(docSnap => {
+          const msg = docSnap.data();
+          const isSent = msg.senderId === currentUser.uid;
+          const isDeleted = msg.deleted;
+          let messageHtml = '';
+          if (isDeleted) { messageHtml = `<em>${isSent ? 'You deleted' : `${customerName} deleted`} a message</em>`; }
+          else {
+            messageHtml = `${escapeHtml(msg.text || '')}`;
+            if (msg.imageUrl) messageHtml += `<div><img src="${msg.imageUrl}" class="chat-message-image" onclick="viewImage('${msg.imageUrl}')"></div>`;
+            if (msg.audioUrl) messageHtml += `<div class="chat-message-audio"><audio controls class="audio-player" src="${msg.audioUrl}"></audio></div>`;
+            if (msg.edited) messageHtml += `<small style="opacity: 0.6;"> (edited)</small>`;
+          }
+          html += `<div class="chat-message ${isSent ? 'sent' : 'received'}" data-message-id="${docSnap.id}"><div class="message-sender">${isSent ? 'You' : customerName}</div><div class="message-text">${messageHtml}</div><div class="chat-message-time">${formatTime(msg.timestamp)}</div>${isSent && !isDeleted ? `<div class="message-actions"><button class="edit-message" onclick="editMessagePrompt('${docSnap.id}', '${escapeHtml(msg.text || '')}')">✏️ Edit</button><button class="delete-message" onclick="deleteMessage('${docSnap.id}')">🗑️ Delete</button></div>` : ''}</div>`;
+        });
+        document.getElementById('chatMessages').innerHTML = html; document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+      });
+      const unreadQuery = query(messagesRef, where("read", "==", false), where("senderId", "!=", currentUser.uid));
+      const unreadMsgs = await getDocs(unreadQuery);
+      for (const msg of unreadMsgs.docs) await updateDoc(doc(db, "chats", chatId, "messages", msg.id), { read: true });
+      await loadInbox();
+      document.getElementById('chatModal').style.display = 'flex';
+      document.getElementById('chatInput').focus();
+      listenForTyping(chatId, customerName);
+    }
+    
+    document.getElementById('chatInput').addEventListener('input', () => {
+      if (!currentChatId) return;
+      if (!isTyping) { isTyping = true; sendTypingIndicator(currentChatId, true); }
+      if (typingTimeoutHandler) clearTimeout(typingTimeoutHandler);
+      typingTimeoutHandler = setTimeout(() => { isTyping = false; sendTypingIndicator(currentChatId, false); }, 1500);
+    });
+    
+    document.getElementById('sendChatBtn').addEventListener('click', sendChatMessage);
+    document.getElementById('chatInput').addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); } });
+    document.getElementById('closeChatBtn').addEventListener('click', () => { document.getElementById('chatModal').style.display = 'none'; if (unsubscribeMessages) unsubscribeMessages(); if (typingListenerUnsubscribe) typingListenerUnsubscribe(); if (isRecording) stopRecording(); });
+    document.getElementById('chatToggleBtn').addEventListener('click', () => { const modal = document.getElementById('chatModal'); modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex'; });
+    document.getElementById('inboxBtn').addEventListener('click', () => { loadInbox(); document.getElementById('inboxModal').style.display = 'flex'; });
+    document.getElementById('closeInboxBtn').addEventListener('click', () => { document.getElementById('inboxModal').style.display = 'none'; });
+    window.addEventListener('click', (e) => { if (e.target === document.getElementById('inboxModal')) document.getElementById('inboxModal').style.display = 'none'; });
     
     window.logout = async () => { await signOut(auth); window.location.href = 'login.html'; };
     
@@ -1259,12 +593,8 @@
       userNameCache[user.uid] = user.displayName || user.email?.split('@')[0] || 'You';
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (!userDoc.exists() || !userDoc.data().isSeller) { alert('You are not registered as a seller'); window.location.href = 'buyer.html'; return; }
-      await loadProducts();
-      await loadPaymentSettings();
-      await loadSellerOrders();
-      await loadInbox();
-      
-      setInterval(() => { if (inboxModal.style.display !== 'flex') { loadInbox(); } }, 10000);
+      await loadProducts(); await loadPaymentSettings(); await loadSellerOrders(); await loadInbox();
+      setInterval(() => { if (document.getElementById('inboxModal').style.display !== 'flex') loadInbox(); }, 10000);
     });
   </script>
 </body>
