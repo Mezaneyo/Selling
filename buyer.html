@@ -61,7 +61,6 @@
     .cart-btn { position: relative; display: flex; align-items: center; gap: 0.3rem; }
     .cart-count { position: absolute; top: -8px; right: -8px; background-color: var(--warning); color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; font-weight: 600; }
     
-    /* Notification Badge */
     .notification-badge { position: absolute; top: -8px; right: -8px; background-color: #dc2626; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.6rem; display: flex; align-items: center; justify-content: center; }
     .notification-btn { position: relative; cursor: pointer; }
     
@@ -89,10 +88,8 @@
     .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
     .product-card { background-color: white; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); transition: var(--transition); display: flex; flex-direction: column; }
     .product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
-    .product-image-container { position: relative; overflow: hidden; background: #f0f0f0; height: 200px; }
-    .product-image { width: 100%; height: 200px; object-fit: cover; transition: transform 0.3s ease; }
-    .product-card:hover .product-image { transform: scale(1.03); }
-    .product-badge { position: absolute; top: 0.5rem; right: 0.5rem; background-color: var(--warning); color: white; padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; }
+    .product-image-container { position: relative; overflow: hidden; background: #e2e8f0; height: 200px; display: flex; align-items: center; justify-content: center; }
+    .product-image { width: 100%; height: 100%; object-fit: cover; }
     .product-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
     .product-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--dark-light); }
     .product-seller { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.5rem; }
@@ -143,23 +140,97 @@
     .chat-message { max-width: 80%; padding: 10px 12px; border-radius: 18px; font-size: 13px; position: relative; }
     .chat-message.sent { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
     .chat-message.received { background: white; color: #333; align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    
+    /* Reply Quote Styling */
+    .reply-quote {
+      background: rgba(0,0,0,0.05);
+      border-left: 3px solid #667eea;
+      padding: 6px 10px;
+      margin-bottom: 6px;
+      border-radius: 8px;
+      font-size: 11px;
+    }
+    .reply-quote-sender { font-weight: 600; margin-bottom: 2px; }
+    .reply-quote-text { opacity: 0.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chat-message.sent .reply-quote { background: rgba(255,255,255,0.15); border-left-color: white; }
+    
     .message-sender { font-size: 11px; font-weight: 600; margin-bottom: 4px; opacity: 0.8; }
     .chat-message.sent .message-sender { text-align: right; }
     .chat-message-time { font-size: 10px; opacity: 0.7; margin-top: 4px; text-align: right; }
     .chat-message-image { max-width: 200px; max-height: 150px; border-radius: 10px; cursor: pointer; margin-top: 5px; }
     .chat-message-audio { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
     .audio-player { max-width: 180px; height: 36px; border-radius: 20px; }
+    
     .message-actions { display: flex; gap: 8px; margin-top: 5px; font-size: 10px; opacity: 0; transition: opacity 0.2s; justify-content: flex-end; }
     .chat-message:hover .message-actions { opacity: 1; }
-    .edit-message, .delete-message { background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 5px; font-size: 10px; }
+    .edit-message, .delete-message, .reply-message, .forward-message { background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 5px; font-size: 10px; }
     .edit-message { color: #667eea; }
     .delete-message { color: #dc2626; }
+    .reply-message { color: #10b981; }
+    .forward-message { color: #f59e0b; }
+    
     .typing-indicator { padding: 8px 15px; font-size: 12px; color: #666; font-style: italic; display: flex; align-items: center; gap: 5px; background: #f8f9fa; border-radius: 20px; margin: 0 15px; }
     .typing-dots { display: flex; gap: 3px; }
     .typing-dots span { width: 5px; height: 5px; background: #667eea; border-radius: 50%; animation: typing 1.4s infinite; }
     .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
     .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-5px); opacity: 1; } }
+    
+    .reply-bar {
+      display: none;
+      align-items: center;
+      padding: 8px 12px;
+      background: #f0f0f0;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      gap: 8px;
+    }
+    .reply-bar-content { flex: 1; }
+    .reply-bar-name { font-weight: 600; }
+    .cancel-reply { background: none; border: none; cursor: pointer; color: #dc2626; font-size: 16px; }
+    
+    .forward-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 2500;
+      align-items: center;
+      justify-content: center;
+    }
+    .forward-container {
+      background: white;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .forward-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px;
+      font-weight: 600;
+    }
+    .forward-list {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 10px;
+    }
+    .forward-item {
+      padding: 15px;
+      border-bottom: 1px solid #e0e0e0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .forward-item:hover { background: #f8f9fa; }
+    .forward-item-name { font-weight: 600; }
+    .forward-item-product { font-size: 11px; color: #666; }
+    .close-forward { background: none; border: none; font-size: 20px; cursor: pointer; color: white; position: absolute; right: 15px; top: 10px; }
+    
     .chat-input-container { display: flex; padding: 12px; background: white; border-top: 1px solid #e0e0e0; gap: 8px; align-items: center; flex-wrap: wrap; }
     .chat-input { flex: 1; padding: 10px; border: 1px solid #e0e0e0; border-radius: 25px; font-size: 13px; resize: none; font-family: inherit; }
     .attach-image-btn, .attach-audio-btn { background: #f0f0f0; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
@@ -223,8 +294,9 @@
       <a href="contact.html" class="footer-link">Contact</a>
       <a href="terms.html" class="footer-link">Terms</a>
       <a href="privacy.html" class="footer-link">Privacy</a>
+      <a href="feedback.html" class="footer-link">Feedback</a>
     </div>
-    <p class="copyright">© 2025 Msika Marketplace. All rights reserved.</p>
+    <p class="copyright">© 2026 Msika Marketplace. All rights reserved.</p>
   </footer>
 
   <!-- INBOX MODAL -->
@@ -238,6 +310,13 @@
   <!-- ENHANCED CHAT MODAL -->
   <div class="chat-modal" id="chatModal">
     <div class="chat-modal-header"><h3 id="chatWithName">Loading...</h3><button class="close-chat" id="closeChatBtn">✕</button></div>
+    <div class="reply-bar" id="replyBar">
+      <div class="reply-bar-content">
+        <div class="reply-bar-name" id="replyBarName">Replying to...</div>
+        <div class="reply-bar-text" id="replyBarText"></div>
+      </div>
+      <button class="cancel-reply" id="cancelReplyBtn">✕</button>
+    </div>
     <div class="chat-messages" id="chatMessages"><div style="text-align: center; padding: 20px;">Select a conversation</div></div>
     <div id="typingIndicator" class="typing-indicator" style="display: none;"></div>
     <div class="chat-input-container">
@@ -245,6 +324,14 @@
       <button class="attach-audio-btn" id="attachAudioBtn" title="Send Voice Note">🎤</button>
       <textarea class="chat-input" id="chatInput" placeholder="Type a message..." rows="1"></textarea>
       <button class="chat-send" id="sendChatBtn">📤</button>
+    </div>
+  </div>
+
+  <!-- FORWARD MODAL -->
+  <div class="forward-modal" id="forwardModal">
+    <div class="forward-container">
+      <div class="forward-header">Forward to... <button class="close-forward" id="closeForwardBtn">✕</button></div>
+      <div class="forward-list" id="forwardList"></div>
     </div>
   </div>
 
@@ -256,7 +343,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
     import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-    import { getFirestore, collection, getDocs, addDoc, query, where, doc, getDoc, updateDoc, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, addDoc, query, where, doc, getDoc, updateDoc, orderBy, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
     
     const firebaseConfig = {
       apiKey: "AIzaSyAadEukg8HmIUwJ6BC2oYYwbz0qb19iR2I",
@@ -276,6 +363,7 @@
     let currentChatId = null;
     let currentChatSellerId = null;
     let currentChatSellerName = null;
+    let pendingReplyTo = null;
     let unsubscribeMessages = null;
     let typingListenerUnsubscribe = null;
     let typingTimeoutHandler = null;
@@ -285,7 +373,6 @@
     let isRecording = false;
     let userNameCache = {};
     
-    // Cloudinary Configuration
     const CLOUDINARY_CLOUD_NAME = "dqmfmxgdy";
     const CLOUDINARY_UPLOAD_PRESET = "msika_audio";
     
@@ -295,14 +382,12 @@
     const filterButtons = document.querySelectorAll('.filter-btn');
     const cartCountEl = document.getElementById('cart-count');
     
-    // Inbox Elements
     const inboxModal = document.getElementById('inboxModal');
     const inboxBtn = document.getElementById('inboxBtn');
     const closeInboxBtn = document.getElementById('closeInboxBtn');
     const inboxList = document.getElementById('inboxList');
     const inboxBadge = document.getElementById('inboxBadge');
     
-    // Chat Elements
     const chatModal = document.getElementById('chatModal');
     const chatToggleBtn = document.getElementById('chatToggleBtn');
     const closeChatBtn = document.getElementById('closeChatBtn');
@@ -312,6 +397,17 @@
     const chatWithName = document.getElementById('chatWithName');
     const attachImageBtn = document.getElementById('attachImageBtn');
     const attachAudioBtn = document.getElementById('attachAudioBtn');
+    
+    const replyBar = document.getElementById('replyBar');
+    const replyBarName = document.getElementById('replyBarName');
+    const replyBarText = document.getElementById('replyBarText');
+    const cancelReplyBtn = document.getElementById('cancelReplyBtn');
+    
+    const forwardModal = document.getElementById('forwardModal');
+    const forwardList = document.getElementById('forwardList');
+    const closeForwardBtn = document.getElementById('closeForwardBtn');
+    
+    let forwardMessageData = null;
     
     function formatMWK(amount) { return 'MK ' + amount.toLocaleString(); }
     function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
@@ -359,7 +455,7 @@
       } catch (error) { throw error; }
     }
     
-    // ========== VOICE RECORDING FUNCTIONS ==========
+    // ========== VOICE RECORDING ==========
     async function startRecording() {
       audioChunks = [];
       try {
@@ -372,9 +468,7 @@
           try {
             const audioUrl = await uploadAudioToCloudinary(audioBlob);
             if (audioUrl && currentChatId) {
-              await addDoc(collection(db, "chats", currentChatId, "messages"), { senderId: currentUser.uid, text: '🎤 Voice note', audioUrl: audioUrl, timestamp: new Date(), read: false, edited: false, deleted: false });
-              await updateDoc(doc(db, "chats", currentChatId), { lastMessage: '🎤 Voice note', lastMessageTime: new Date() });
-              showToast('Voice note sent! 🎤');
+              await sendChatMessageWithReply(audioUrl, true);
             }
           } catch (error) { showToast('Failed to send voice note', true); }
           stream.getTracks().forEach(track => track.stop());
@@ -426,7 +520,118 @@
       document.querySelectorAll('.inbox-item').forEach(item => { item.addEventListener('click', () => { openChat(item.dataset.chatId, item.dataset.sellerName, item.dataset.productName); inboxModal.style.display = 'none'; }); });
     }
     
-    // ========== ENHANCED CHAT FUNCTIONS ==========
+    // ========== SEND MESSAGE WITH REPLY SUPPORT ==========
+    async function sendChatMessageWithReply(audioUrl = null, isAudio = false) {
+      const text = chatInput.value.trim();
+      if (!text && !audioUrl) return;
+      
+      let messageData = {
+        senderId: currentUser.uid,
+        timestamp: new Date(),
+        read: false,
+        edited: false,
+        deleted: false
+      };
+      
+      if (audioUrl) {
+        messageData.text = '🎤 Voice note';
+        messageData.audioUrl = audioUrl;
+      } else {
+        messageData.text = text;
+      }
+      
+      if (pendingReplyTo) {
+        messageData.replyTo = {
+          messageId: pendingReplyTo.id,
+          senderName: pendingReplyTo.senderName,
+          text: pendingReplyTo.text,
+          imageUrl: pendingReplyTo.imageUrl || null
+        };
+        pendingReplyTo = null;
+        replyBar.style.display = 'none';
+      }
+      
+      await addDoc(collection(db, "chats", currentChatId, "messages"), messageData);
+      await updateDoc(doc(db, "chats", currentChatId), { lastMessage: text || '🎤 Voice note', lastMessageTime: new Date() });
+      chatInput.value = '';
+      sendTypingIndicator(currentChatId, false);
+    }
+    
+    async function sendChatMessage() {
+      await sendChatMessageWithReply();
+    }
+    
+    // ========== FORWARD FUNCTIONS ==========
+    async function loadForwardList() {
+      const chatsRef = collection(db, "chats");
+      const q = query(chatsRef, where("participants", "array-contains", currentUser.uid));
+      const snapshot = await getDocs(q);
+      let conversations = [];
+      for (const docSnap of snapshot.docs) {
+        const chat = { id: docSnap.id, ...docSnap.data() };
+        if (chat.id === currentChatId) continue;
+        const otherId = chat.participants.find(p => p !== currentUser.uid);
+        const otherName = await getUserName(otherId);
+        conversations.push({ id: chat.id, name: otherName, productName: chat.productName || 'Product' });
+      }
+      if (conversations.length === 0) {
+        forwardList.innerHTML = '<div style="text-align: center; padding: 20px;">No other conversations to forward to</div>';
+      } else {
+        forwardList.innerHTML = conversations.map(conv => `
+          <div class="forward-item" data-chat-id="${conv.id}">
+            <div class="forward-item-name">${escapeHtml(conv.name)}</div>
+            <div class="forward-item-product">${escapeHtml(conv.productName)}</div>
+          </div>
+        `).join('');
+        document.querySelectorAll('.forward-item').forEach(item => {
+          item.addEventListener('click', async () => {
+            const targetChatId = item.dataset.chatId;
+            await addDoc(collection(db, "chats", targetChatId, "messages"), {
+              senderId: currentUser.uid,
+              text: forwardMessageData.text,
+              imageUrl: forwardMessageData.imageUrl || null,
+              audioUrl: forwardMessageData.audioUrl || null,
+              timestamp: new Date(),
+              read: false,
+              edited: false,
+              deleted: false,
+              isForwarded: true,
+              originalSender: forwardMessageData.senderName
+            });
+            showToast('Message forwarded!');
+            forwardModal.style.display = 'none';
+            forwardMessageData = null;
+          });
+        });
+      }
+    }
+    
+    window.forwardMessage = async (messageId, messageData) => {
+      forwardMessageData = messageData;
+      await loadForwardList();
+      forwardModal.style.display = 'flex';
+    };
+    
+    // ========== REPLY FUNCTION ==========
+    window.replyToMessage = (messageId, senderName, messageText, imageUrl = null) => {
+      pendingReplyTo = {
+        id: messageId,
+        senderName: senderName,
+        text: messageText,
+        imageUrl: imageUrl
+      };
+      replyBarName.textContent = `Replying to ${senderName}`;
+      replyBarText.textContent = messageText.length > 50 ? messageText.substring(0, 50) + '...' : messageText;
+      replyBar.style.display = 'flex';
+      chatInput.focus();
+    };
+    
+    cancelReplyBtn.addEventListener('click', () => {
+      pendingReplyTo = null;
+      replyBar.style.display = 'none';
+    });
+    
+    // ========== CHAT FUNCTIONS ==========
     async function sendTypingIndicator(chatId, typing) {
       if (!chatId) return;
       try { await updateDoc(doc(db, "chats", chatId), { [`typing_${currentUser.uid}`]: typing, lastTypingUpdate: new Date() }); } catch (error) {}
@@ -470,48 +675,55 @@
         if (e.target.files[0]) {
           showToast('Uploading image...');
           const imageUrl = await uploadToImgBB(e.target.files[0]);
-          await addDoc(collection(db, "chats", currentChatId, "messages"), { senderId: currentUser.uid, text: '📷 Image', imageUrl: imageUrl, timestamp: new Date(), read: false, edited: false, deleted: false });
-          await updateDoc(doc(db, "chats", currentChatId), { lastMessage: '📷 Image', lastMessageTime: new Date() });
-          showToast('Image sent!');
+          await sendChatMessageWithReply();
         }
       };
       fileInput.click();
     });
     
-    async function sendChatMessage() {
-      const text = chatInput.value.trim();
-      if (!text && !currentChatId) return;
-      await addDoc(collection(db, "chats", currentChatId, "messages"), { senderId: currentUser.uid, text: text, timestamp: new Date(), read: false, edited: false, deleted: false });
-      await updateDoc(doc(db, "chats", currentChatId), { lastMessage: text, lastMessageTime: new Date() });
-      chatInput.value = '';
-      sendTypingIndicator(currentChatId, false);
-    }
-    
     async function openChat(chatId, sellerName, productName) {
       if (unsubscribeMessages) unsubscribeMessages();
+      pendingReplyTo = null;
+      replyBar.style.display = 'none';
       currentChatId = chatId;
       currentChatSellerId = (await getDoc(doc(db, "chats", chatId))).data().participants.find(p => p !== currentUser.uid);
       chatWithName.innerHTML = `${escapeHtml(sellerName)}<br><small style="font-size: 11px;">${escapeHtml(productName)}</small>`;
       chatMessages.innerHTML = '<div style="text-align: center; padding: 20px;">Loading messages...</div>';
       const messagesRef = collection(db, "chats", chatId, "messages");
       const q = query(messagesRef, orderBy("timestamp", "asc"));
-      unsubscribeMessages = onSnapshot(q, (snapshot) => {
+      unsubscribeMessages = onSnapshot(q, async (snapshot) => {
         if (snapshot.empty) { chatMessages.innerHTML = '<div style="text-align: center; padding: 20px;">No messages yet. Start the conversation!</div>'; return; }
         let html = '';
-        snapshot.forEach(docSnap => {
+        for (const docSnap of snapshot.docs) {
           const msg = docSnap.data();
           const isSent = msg.senderId === currentUser.uid;
           const isDeleted = msg.deleted;
           let messageHtml = '';
           if (isDeleted) { messageHtml = `<em>${isSent ? 'You deleted' : `${sellerName} deleted`} a message</em>`; }
           else {
-            messageHtml = `${escapeHtml(msg.text || '')}`;
+            // Reply quote
+            let replyHtml = '';
+            if (msg.replyTo) {
+              replyHtml = `<div class="reply-quote"><div class="reply-quote-sender">${escapeHtml(msg.replyTo.senderName)}</div><div class="reply-quote-text">${escapeHtml(msg.replyTo.text)}</div></div>`;
+            }
+            messageHtml = replyHtml + `<div>${escapeHtml(msg.text || '')}</div>`;
             if (msg.imageUrl) messageHtml += `<div><img src="${msg.imageUrl}" class="chat-message-image" onclick="viewImage('${msg.imageUrl}')"></div>`;
             if (msg.audioUrl) messageHtml += `<div class="chat-message-audio"><audio controls class="audio-player" src="${msg.audioUrl}"></audio></div>`;
+            if (msg.isForwarded) messageHtml += `<small style="opacity: 0.5;">Forwarded from ${escapeHtml(msg.originalSender)}</small>`;
             if (msg.edited) messageHtml += `<small style="opacity: 0.6;"> (edited)</small>`;
           }
-          html += `<div class="chat-message ${isSent ? 'sent' : 'received'}" data-message-id="${docSnap.id}"><div class="message-sender">${isSent ? 'You' : sellerName}</div><div class="message-text">${messageHtml}</div><div class="chat-message-time">${formatTime(msg.timestamp)}</div>${isSent && !isDeleted ? `<div class="message-actions"><button class="edit-message" onclick="editMessagePrompt('${docSnap.id}', '${escapeHtml(msg.text || '')}')">✏️ Edit</button><button class="delete-message" onclick="deleteMessage('${docSnap.id}')">🗑️ Delete</button></div>` : ''}</div>`;
-        });
+          html += `<div class="chat-message ${isSent ? 'sent' : 'received'}" data-message-id="${docSnap.id}">
+            <div class="message-sender">${isSent ? 'You' : sellerName}</div>
+            <div class="message-text">${messageHtml}</div>
+            <div class="chat-message-time">${formatTime(msg.timestamp)}</div>
+            ${!isDeleted ? `<div class="message-actions">
+              <button class="reply-message" onclick="replyToMessage('${docSnap.id}', '${isSent ? 'You' : sellerName}', '${escapeHtml(msg.text || '').replace(/'/g, "\\'")}', '${msg.imageUrl || ''}')">↩️ Reply</button>
+              ${isSent ? `<button class="edit-message" onclick="editMessagePrompt('${docSnap.id}', '${escapeHtml(msg.text || '').replace(/'/g, "\\'")}')">✏️ Edit</button>
+              <button class="delete-message" onclick="deleteMessage('${docSnap.id}')">🗑️ Delete</button>` : ''}
+              <button class="forward-message" onclick="forwardMessage('${docSnap.id}', { text: '${escapeHtml(msg.text || '').replace(/'/g, "\\'")}', imageUrl: '${msg.imageUrl || ''}', audioUrl: '${msg.audioUrl || ''}', senderName: '${isSent ? 'You' : sellerName}' })">📤 Forward</button>
+            </div>` : ''}
+          </div>`;
+        }
         chatMessages.innerHTML = html; chatMessages.scrollTop = chatMessages.scrollHeight;
       });
       const unreadQuery = query(messagesRef, where("read", "==", false), where("senderId", "!=", currentUser.uid));
@@ -549,7 +761,8 @@
     chatToggleBtn.addEventListener('click', () => { chatModal.style.display = chatModal.style.display === 'flex' ? 'none' : 'flex'; });
     inboxBtn.addEventListener('click', () => { loadInbox(); inboxModal.style.display = 'flex'; });
     closeInboxBtn.addEventListener('click', () => { inboxModal.style.display = 'none'; });
-    window.addEventListener('click', (e) => { if (e.target === inboxModal) inboxModal.style.display = 'none'; });
+    closeForwardBtn.addEventListener('click', () => { forwardModal.style.display = 'none'; });
+    window.addEventListener('click', (e) => { if (e.target === inboxModal) inboxModal.style.display = 'none'; if (e.target === forwardModal) forwardModal.style.display = 'none'; });
     
     // ========== PRODUCT FUNCTIONS ==========
     async function updateCartCount() {
@@ -567,15 +780,12 @@
       try {
         const productsRef = collection(db, "products");
         const snapshot = await getDocs(productsRef);
-        if (snapshot.empty) {
-          const sampleProducts = [
-            { name: "Mpunga (Rice)", price: 4500, category: "Food", sellerName: "Chrissy Misanjo", imageUrl: "https://images.unsplash.com/photo-1586201375761-83865001e8ac", sellerId: "sample_seller" },
-            { name: "Wireless Headphones", price: 75000, category: "Electronics", sellerName: "TechStore", imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e", sellerId: "sample_seller2" },
-            { name: "Leather Wallet", price: 25000, category: "Fashion", sellerName: "FashionHub", imageUrl: "https://images.unsplash.com/photo-1590856029826-c7a73142bbf1", sellerId: "sample_seller3" }
-          ];
-          for (const product of sampleProducts) { await addDoc(collection(db, "products"), product); }
-          allProducts = sampleProducts;
-        } else { allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); }
+        if (snapshot.empty) { 
+          productsContainer.innerHTML = '<div class="empty-state">No products available. Sellers add products to get started!</div>';
+          allProducts = [];
+          return;
+        }
+        allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         filterProducts();
       } catch (error) { console.error("Error:", error); productsContainer.innerHTML = '<div class="empty-state">Error loading products</div>'; }
     }
@@ -592,13 +802,33 @@
     }
     
     function renderProducts(products) {
-      if (!products || products.length === 0) { productsContainer.innerHTML = `<div class="empty-state"><div style="font-size: 48px;">🔍</div><h3>No products found</h3><p>Try adjusting your search</p></div>`; return; }
-      productsContainer.innerHTML = products.map(product => `
-        <div class="product-card" data-id="${product.id}">
-          <div class="product-image-container"><img src="${product.imageUrl || 'https://placehold.co/400x300'}" class="product-image" alt="${product.name}" onerror="this.src='https://placehold.co/400x300'">${product.featured ? '<span class="product-badge">Featured</span>' : ''}</div>
-          <div class="product-body"><span class="product-category">${product.category || 'Other'}</span><h3 class="product-title">${escapeHtml(product.name)}</h3><p class="product-seller">by ${escapeHtml(product.sellerName || 'Unknown Seller')}</p><div class="product-footer"><div class="product-price">${formatMWK(product.price || 0)}</div></div><div class="action-buttons"><button class="add-to-cart" onclick="addToCart('${product.id}')">🛒 Add to Cart</button><button class="message-seller" onclick="openChatWithSeller('${product.id}', '${product.sellerId}', '${escapeHtml(product.sellerName || 'Seller')}', '${escapeHtml(product.name)}')">💬 Message</button></div></div>
-        </div>
-      `).join('');
+      if (!products || products.length === 0) { 
+        productsContainer.innerHTML = `<div class="empty-state"><div style="font-size: 48px;">🔍</div><h3>No products found</h3><p>Try adjusting your search</p></div>`; 
+        return; 
+      }
+      productsContainer.innerHTML = products.map(product => {
+        const imageUrl = product.imageUrl || product.mainImage || (product.imageUrls && product.imageUrls[0]) || 'https://picsum.photos/400/300?random=' + product.id;
+        return `
+          <div class="product-card" data-id="${product.id}">
+            <div class="product-image-container">
+              <img src="${imageUrl}" class="product-image" alt="${escapeHtml(product.name)}" onerror="this.onerror=null; this.src='https://picsum.photos/400/300?random=${Date.now()}';">
+              ${product.featured ? '<span class="product-badge">Featured</span>' : ''}
+            </div>
+            <div class="product-body">
+              <span class="product-category">${product.category || 'Other'}</span>
+              <h3 class="product-title">${escapeHtml(product.name)}</h3>
+              <p class="product-seller">by ${escapeHtml(product.sellerName || 'Unknown Seller')}</p>
+              <div class="product-footer">
+                <div class="product-price">${formatMWK(product.price || 0)}</div>
+              </div>
+              <div class="action-buttons">
+                <button class="add-to-cart" onclick="addToCart('${product.id}')">🛒 Add to Cart</button>
+                <button class="message-seller" onclick="openChatWithSeller('${product.id}', '${product.sellerId || ''}', '${escapeHtml(product.sellerName || 'Seller')}', '${escapeHtml(product.name)}')">💬 Message</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
     
     window.addToCart = async (productId) => {
@@ -610,7 +840,7 @@
         const q = query(cartRef, where("userId", "==", currentUser.uid), where("productId", "==", productId));
         const existing = await getDocs(q);
         if (!existing.empty) { showToast(`${product.name} is already in your cart`); return; }
-        await addDoc(collection(db, "cart"), { userId: currentUser.uid, productId: product.id, productName: product.name, productPrice: product.price, productImage: product.imageUrl, sellerName: product.sellerName || 'Seller', sellerId: product.sellerId, quantity: 1, addedAt: new Date() });
+        await addDoc(collection(db, "cart"), { userId: currentUser.uid, productId: product.id, productName: product.name, productPrice: product.price, productImage: product.imageUrl || product.mainImage, sellerName: product.sellerName || 'Seller', sellerId: product.sellerId, quantity: 1, addedAt: new Date() });
         showToast(`${product.name} added to cart! 🛒`);
         await updateCartCount();
         const btn = document.querySelector(`.product-card[data-id="${productId}"] .add-to-cart`);
@@ -628,7 +858,9 @@
       if (!user) { window.location.href = 'login.html'; return; }
       currentUser = user;
       userNameCache[user.uid] = user.displayName || user.email?.split('@')[0] || 'You';
-      await loadProducts(); await updateCartCount(); await loadInbox();
+      await loadProducts(); 
+      await updateCartCount(); 
+      await loadInbox();
       setInterval(() => { if (inboxModal.style.display !== 'flex') loadInbox(); }, 10000);
     });
   </script>

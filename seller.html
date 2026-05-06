@@ -123,23 +123,97 @@
     .chat-message { max-width: 80%; padding: 10px 12px; border-radius: 18px; font-size: 13px; position: relative; }
     .chat-message.sent { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
     .chat-message.received { background: white; color: #333; align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    
+    /* Reply Quote Styling */
+    .reply-quote {
+      background: rgba(0,0,0,0.05);
+      border-left: 3px solid #667eea;
+      padding: 6px 10px;
+      margin-bottom: 6px;
+      border-radius: 8px;
+      font-size: 11px;
+    }
+    .reply-quote-sender { font-weight: 600; margin-bottom: 2px; }
+    .reply-quote-text { opacity: 0.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chat-message.sent .reply-quote { background: rgba(255,255,255,0.15); border-left-color: white; }
+    
     .message-sender { font-size: 11px; font-weight: 600; margin-bottom: 4px; opacity: 0.8; }
     .chat-message.sent .message-sender { text-align: right; }
     .chat-message-time { font-size: 10px; opacity: 0.7; margin-top: 4px; text-align: right; }
     .chat-message-image { max-width: 200px; max-height: 150px; border-radius: 10px; cursor: pointer; margin-top: 5px; }
     .chat-message-audio { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
     .audio-player { max-width: 180px; height: 36px; border-radius: 20px; }
+    
     .message-actions { display: flex; gap: 8px; margin-top: 5px; font-size: 10px; opacity: 0; transition: opacity 0.2s; justify-content: flex-end; }
     .chat-message:hover .message-actions { opacity: 1; }
-    .edit-message, .delete-message { background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 5px; font-size: 10px; }
+    .edit-message, .delete-message, .reply-message, .forward-message { background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 5px; font-size: 10px; }
     .edit-message { color: #667eea; }
     .delete-message { color: #dc2626; }
+    .reply-message { color: #10b981; }
+    .forward-message { color: #f59e0b; }
+    
     .typing-indicator { padding: 8px 15px; font-size: 12px; color: #666; font-style: italic; display: flex; align-items: center; gap: 5px; background: #f8f9fa; border-radius: 20px; margin: 0 15px; }
     .typing-dots { display: flex; gap: 3px; }
     .typing-dots span { width: 5px; height: 5px; background: #667eea; border-radius: 50%; animation: typing 1.4s infinite; }
     .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
     .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-5px); opacity: 1; } }
+    
+    .reply-bar {
+      display: none;
+      align-items: center;
+      padding: 8px 12px;
+      background: #f0f0f0;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      gap: 8px;
+    }
+    .reply-bar-content { flex: 1; }
+    .reply-bar-name { font-weight: 600; }
+    .cancel-reply { background: none; border: none; cursor: pointer; color: #dc2626; font-size: 16px; }
+    
+    .forward-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 2500;
+      align-items: center;
+      justify-content: center;
+    }
+    .forward-container {
+      background: white;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .forward-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px;
+      font-weight: 600;
+    }
+    .forward-list {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 10px;
+    }
+    .forward-item {
+      padding: 15px;
+      border-bottom: 1px solid #e0e0e0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .forward-item:hover { background: #f8f9fa; }
+    .forward-item-name { font-weight: 600; }
+    .forward-item-product { font-size: 11px; color: #666; }
+    .close-forward { background: none; border: none; font-size: 20px; cursor: pointer; color: white; position: absolute; right: 15px; top: 10px; }
+    
     .chat-input-container { display: flex; padding: 12px; background: white; border-top: 1px solid #e0e0e0; gap: 8px; align-items: center; flex-wrap: wrap; }
     .chat-input { flex: 1; padding: 10px; border: 1px solid #e0e0e0; border-radius: 25px; font-size: 13px; resize: none; font-family: inherit; }
     .attach-image-btn, .attach-audio-btn { background: #f0f0f0; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
@@ -220,6 +294,13 @@
   <!-- ENHANCED CHAT MODAL -->
   <div class="chat-modal" id="chatModal">
     <div class="chat-modal-header"><h3 id="chatWithName">Loading...</h3><button class="close-chat" id="closeChatBtn">✕</button></div>
+    <div class="reply-bar" id="replyBar">
+      <div class="reply-bar-content">
+        <div class="reply-bar-name" id="replyBarName">Replying to...</div>
+        <div class="reply-bar-text" id="replyBarText"></div>
+      </div>
+      <button class="cancel-reply" id="cancelReplyBtn">✕</button>
+    </div>
     <div class="chat-messages" id="chatMessages"><div style="text-align: center; padding: 20px;">Select a conversation</div></div>
     <div id="typingIndicator" class="typing-indicator" style="display: none;"></div>
     <div class="chat-input-container">
@@ -227,6 +308,14 @@
       <button class="attach-audio-btn" id="attachAudioBtn" title="Send Voice Note">🎤</button>
       <textarea class="chat-input" id="chatInput" placeholder="Type a message..." rows="1"></textarea>
       <button class="chat-send" id="sendChatBtn">📤</button>
+    </div>
+  </div>
+
+  <!-- FORWARD MODAL -->
+  <div class="forward-modal" id="forwardModal">
+    <div class="forward-container">
+      <div class="forward-header">Forward to... <button class="close-forward" id="closeForwardBtn">✕</button></div>
+      <div class="forward-list" id="forwardList"></div>
     </div>
   </div>
 
@@ -260,6 +349,8 @@
     let currentUser = null;
     let currentChatId = null;
     let currentChatBuyerId = null;
+    let currentChatBuyerName = null;
+    let pendingReplyTo = null;
     let unsubscribeMessages = null;
     let typingListenerUnsubscribe = null;
     let typingTimeoutHandler = null;
@@ -269,6 +360,7 @@
     let isRecording = false;
     let userNameCache = {};
     let imageFiles = [];
+    let forwardMessageData = null;
     
     function formatMWK(amount) { return 'MK ' + amount.toLocaleString(); }
     function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
@@ -329,9 +421,7 @@
           try {
             const audioUrl = await uploadAudioToCloudinary(audioBlob);
             if (audioUrl && currentChatId) {
-              await addDoc(collection(db, "chats", currentChatId, "messages"), { senderId: currentUser.uid, text: '🎤 Voice note', audioUrl: audioUrl, timestamp: new Date(), read: false, edited: false, deleted: false });
-              await updateDoc(doc(db, "chats", currentChatId), { lastMessage: '🎤 Voice note', lastMessageTime: new Date() });
-              showToast('Voice note sent! 🎤');
+              await sendChatMessageWithReply(audioUrl, true);
             }
           } catch (error) { showToast('Failed to send voice note', true); }
           stream.getTracks().forEach(track => track.stop());
@@ -463,6 +553,117 @@
     document.getElementById('paymentMethod').addEventListener('change', (e) => togglePaymentFields(e.target.value));
     document.getElementById('paymentSettingsForm').addEventListener('submit', async (e) => { e.preventDefault(); const method = document.getElementById('paymentMethod').value; if (!method) { showToast('Please select a payment method', true); return; } let settings = { method: method, updatedAt: new Date() }; if (method === 'mpamba') { const mobileNumber = document.getElementById('mpambaNumber').value; const accountName = document.getElementById('mpambaName').value; if (!mobileNumber || !accountName) { showToast('Please fill all Mpamba details', true); return; } settings.mobileNumber = mobileNumber; settings.accountName = accountName; settings.provider = 'TNM Mpamba'; } else if (method === 'airtel') { const mobileNumber = document.getElementById('airtelNumber').value; const accountName = document.getElementById('airtelName').value; if (!mobileNumber || !accountName) { showToast('Please fill all Airtel details', true); return; } settings.mobileNumber = mobileNumber; settings.accountName = accountName; settings.provider = 'Airtel Money'; } else if (method === 'bank') { const bankName = document.getElementById('bankName').value; const accountNumber = document.getElementById('bankAccountNumber').value; const accountName = document.getElementById('bankAccountName').value; const branch = document.getElementById('bankBranch').value; if (!bankName || !accountNumber || !accountName || !branch) { showToast('Please fill all bank details', true); return; } settings.bankName = bankName; settings.accountNumber = accountNumber; settings.accountName = accountName; settings.branch = branch; } try { await setDoc(doc(db, "sellerPaymentSettings", currentUser.uid), settings); showToast('✅ Payment settings saved successfully!'); } catch (error) { showToast('❌ Error saving settings', true); } });
     
+    // ========== SEND MESSAGE WITH REPLY SUPPORT ==========
+    async function sendChatMessageWithReply(audioUrl = null, isAudio = false) {
+      const text = document.getElementById('chatInput').value.trim();
+      if (!text && !audioUrl) return;
+      
+      let messageData = {
+        senderId: currentUser.uid,
+        timestamp: new Date(),
+        read: false,
+        edited: false,
+        deleted: false
+      };
+      
+      if (audioUrl) {
+        messageData.text = '🎤 Voice note';
+        messageData.audioUrl = audioUrl;
+      } else {
+        messageData.text = text;
+      }
+      
+      if (pendingReplyTo) {
+        messageData.replyTo = {
+          messageId: pendingReplyTo.id,
+          senderName: pendingReplyTo.senderName,
+          text: pendingReplyTo.text,
+          imageUrl: pendingReplyTo.imageUrl || null
+        };
+        pendingReplyTo = null;
+        document.getElementById('replyBar').style.display = 'none';
+      }
+      
+      await addDoc(collection(db, "chats", currentChatId, "messages"), messageData);
+      await updateDoc(doc(db, "chats", currentChatId), { lastMessage: text || '🎤 Voice note', lastMessageTime: new Date() });
+      document.getElementById('chatInput').value = '';
+      sendTypingIndicator(currentChatId, false);
+    }
+    
+    async function sendChatMessage() {
+      await sendChatMessageWithReply();
+    }
+    
+    // ========== FORWARD FUNCTIONS ==========
+    async function loadForwardList() {
+      const chatsRef = collection(db, "chats");
+      const q = query(chatsRef, where("participants", "array-contains", currentUser.uid));
+      const snapshot = await getDocs(q);
+      let conversations = [];
+      for (const docSnap of snapshot.docs) {
+        const chat = { id: docSnap.id, ...docSnap.data() };
+        if (chat.id === currentChatId) continue;
+        const otherId = chat.participants.find(p => p !== currentUser.uid);
+        const otherName = await getUserName(otherId);
+        conversations.push({ id: chat.id, name: otherName, productName: chat.productName || 'Product' });
+      }
+      if (conversations.length === 0) {
+        document.getElementById('forwardList').innerHTML = '<div style="text-align: center; padding: 20px;">No other conversations to forward to</div>';
+      } else {
+        document.getElementById('forwardList').innerHTML = conversations.map(conv => `
+          <div class="forward-item" data-chat-id="${conv.id}">
+            <div class="forward-item-name">${escapeHtml(conv.name)}</div>
+            <div class="forward-item-product">${escapeHtml(conv.productName)}</div>
+          </div>
+        `).join('');
+        document.querySelectorAll('.forward-item').forEach(item => {
+          item.addEventListener('click', async () => {
+            const targetChatId = item.dataset.chatId;
+            await addDoc(collection(db, "chats", targetChatId, "messages"), {
+              senderId: currentUser.uid,
+              text: forwardMessageData.text,
+              imageUrl: forwardMessageData.imageUrl || null,
+              audioUrl: forwardMessageData.audioUrl || null,
+              timestamp: new Date(),
+              read: false,
+              edited: false,
+              deleted: false,
+              isForwarded: true,
+              originalSender: forwardMessageData.senderName
+            });
+            showToast('Message forwarded!');
+            document.getElementById('forwardModal').style.display = 'none';
+            forwardMessageData = null;
+          });
+        });
+      }
+    }
+    
+    window.forwardMessage = async (messageId, messageData) => {
+      forwardMessageData = messageData;
+      await loadForwardList();
+      document.getElementById('forwardModal').style.display = 'flex';
+    };
+    
+    // ========== REPLY FUNCTION ==========
+    window.replyToMessage = (messageId, senderName, messageText, imageUrl = null) => {
+      pendingReplyTo = {
+        id: messageId,
+        senderName: senderName,
+        text: messageText,
+        imageUrl: imageUrl
+      };
+      document.getElementById('replyBarName').textContent = `Replying to ${senderName}`;
+      document.getElementById('replyBarText').textContent = messageText.length > 50 ? messageText.substring(0, 50) + '...' : messageText;
+      document.getElementById('replyBar').style.display = 'flex';
+      document.getElementById('chatInput').focus();
+    };
+    
+    document.getElementById('cancelReplyBtn').addEventListener('click', () => {
+      pendingReplyTo = null;
+      document.getElementById('replyBar').style.display = 'none';
+    });
+    
     // ========== INBOX FUNCTIONS ==========
     async function loadInbox() {
       if (!currentUser) return;
@@ -487,7 +688,7 @@
       document.querySelectorAll('.inbox-item').forEach(item => { item.addEventListener('click', () => { openChat(item.dataset.chatId, item.dataset.customerName, item.dataset.productName); document.getElementById('inboxModal').style.display = 'none'; }); });
     }
     
-    // ========== ENHANCED CHAT FUNCTIONS ==========
+    // ========== CHAT FUNCTIONS ==========
     async function sendTypingIndicator(chatId, typing) {
       if (!chatId) return;
       try { await updateDoc(doc(db, "chats", chatId), { [`typing_${currentUser.uid}`]: typing, lastTypingUpdate: new Date() }); } catch (error) {}
@@ -531,48 +732,55 @@
         if (e.target.files[0]) {
           showToast('Uploading image...');
           const imageUrl = await uploadToImgBB(e.target.files[0]);
-          await addDoc(collection(db, "chats", currentChatId, "messages"), { senderId: currentUser.uid, text: '📷 Image', imageUrl: imageUrl, timestamp: new Date(), read: false, edited: false, deleted: false });
-          await updateDoc(doc(db, "chats", currentChatId), { lastMessage: '📷 Image', lastMessageTime: new Date() });
-          showToast('Image sent!');
+          await sendChatMessageWithReply();
         }
       };
       fileInput.click();
     });
     
-    async function sendChatMessage() {
-      const text = document.getElementById('chatInput').value.trim();
-      if (!text && !currentChatId) return;
-      await addDoc(collection(db, "chats", currentChatId, "messages"), { senderId: currentUser.uid, text: text, timestamp: new Date(), read: false, edited: false, deleted: false });
-      await updateDoc(doc(db, "chats", currentChatId), { lastMessage: text, lastMessageTime: new Date() });
-      document.getElementById('chatInput').value = '';
-      sendTypingIndicator(currentChatId, false);
-    }
-    
     async function openChat(chatId, customerName, productName) {
       if (unsubscribeMessages) unsubscribeMessages();
+      pendingReplyTo = null;
+      document.getElementById('replyBar').style.display = 'none';
       currentChatId = chatId;
       currentChatBuyerId = (await getDoc(doc(db, "chats", chatId))).data().participants.find(p => p !== currentUser.uid);
+      currentChatBuyerName = customerName;
       document.getElementById('chatWithName').innerHTML = `${escapeHtml(customerName)}<br><small style="font-size: 11px;">${escapeHtml(productName)}</small>`;
       document.getElementById('chatMessages').innerHTML = '<div style="text-align: center; padding: 20px;">Loading messages...</div>';
       const messagesRef = collection(db, "chats", chatId, "messages");
       const q = query(messagesRef, orderBy("timestamp", "asc"));
-      unsubscribeMessages = onSnapshot(q, (snapshot) => {
+      unsubscribeMessages = onSnapshot(q, async (snapshot) => {
         if (snapshot.empty) { document.getElementById('chatMessages').innerHTML = '<div style="text-align: center; padding: 20px;">No messages yet. Start the conversation!</div>'; return; }
         let html = '';
-        snapshot.forEach(docSnap => {
+        for (const docSnap of snapshot.docs) {
           const msg = docSnap.data();
           const isSent = msg.senderId === currentUser.uid;
           const isDeleted = msg.deleted;
           let messageHtml = '';
           if (isDeleted) { messageHtml = `<em>${isSent ? 'You deleted' : `${customerName} deleted`} a message</em>`; }
           else {
-            messageHtml = `${escapeHtml(msg.text || '')}`;
+            let replyHtml = '';
+            if (msg.replyTo) {
+              replyHtml = `<div class="reply-quote"><div class="reply-quote-sender">${escapeHtml(msg.replyTo.senderName)}</div><div class="reply-quote-text">${escapeHtml(msg.replyTo.text)}</div></div>`;
+            }
+            messageHtml = replyHtml + `<div>${escapeHtml(msg.text || '')}</div>`;
             if (msg.imageUrl) messageHtml += `<div><img src="${msg.imageUrl}" class="chat-message-image" onclick="viewImage('${msg.imageUrl}')"></div>`;
             if (msg.audioUrl) messageHtml += `<div class="chat-message-audio"><audio controls class="audio-player" src="${msg.audioUrl}"></audio></div>`;
+            if (msg.isForwarded) messageHtml += `<small style="opacity: 0.5;">Forwarded from ${escapeHtml(msg.originalSender)}</small>`;
             if (msg.edited) messageHtml += `<small style="opacity: 0.6;"> (edited)</small>`;
           }
-          html += `<div class="chat-message ${isSent ? 'sent' : 'received'}" data-message-id="${docSnap.id}"><div class="message-sender">${isSent ? 'You' : customerName}</div><div class="message-text">${messageHtml}</div><div class="chat-message-time">${formatTime(msg.timestamp)}</div>${isSent && !isDeleted ? `<div class="message-actions"><button class="edit-message" onclick="editMessagePrompt('${docSnap.id}', '${escapeHtml(msg.text || '')}')">✏️ Edit</button><button class="delete-message" onclick="deleteMessage('${docSnap.id}')">🗑️ Delete</button></div>` : ''}</div>`;
-        });
+          html += `<div class="chat-message ${isSent ? 'sent' : 'received'}" data-message-id="${docSnap.id}">
+            <div class="message-sender">${isSent ? 'You' : customerName}</div>
+            <div class="message-text">${messageHtml}</div>
+            <div class="chat-message-time">${formatTime(msg.timestamp)}</div>
+            ${!isDeleted ? `<div class="message-actions">
+              <button class="reply-message" onclick="replyToMessage('${docSnap.id}', '${isSent ? 'You' : customerName}', '${escapeHtml(msg.text || '').replace(/'/g, "\\'")}', '${msg.imageUrl || ''}')">↩️ Reply</button>
+              ${isSent ? `<button class="edit-message" onclick="editMessagePrompt('${docSnap.id}', '${escapeHtml(msg.text || '').replace(/'/g, "\\'")}')">✏️ Edit</button>
+              <button class="delete-message" onclick="deleteMessage('${docSnap.id}')">🗑️ Delete</button>` : ''}
+              <button class="forward-message" onclick="forwardMessage('${docSnap.id}', { text: '${escapeHtml(msg.text || '').replace(/'/g, "\\'")}', imageUrl: '${msg.imageUrl || ''}', audioUrl: '${msg.audioUrl || ''}', senderName: '${isSent ? 'You' : customerName}' })">📤 Forward</button>
+            </div>` : ''}
+          </div>`;
+        }
         document.getElementById('chatMessages').innerHTML = html; document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
       });
       const unreadQuery = query(messagesRef, where("read", "==", false), where("senderId", "!=", currentUser.uid));
@@ -597,7 +805,8 @@
     document.getElementById('chatToggleBtn').addEventListener('click', () => { const modal = document.getElementById('chatModal'); modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex'; });
     document.getElementById('inboxBtn').addEventListener('click', () => { loadInbox(); document.getElementById('inboxModal').style.display = 'flex'; });
     document.getElementById('closeInboxBtn').addEventListener('click', () => { document.getElementById('inboxModal').style.display = 'none'; });
-    window.addEventListener('click', (e) => { if (e.target === document.getElementById('inboxModal')) document.getElementById('inboxModal').style.display = 'none'; });
+    document.getElementById('closeForwardBtn').addEventListener('click', () => { document.getElementById('forwardModal').style.display = 'none'; });
+    window.addEventListener('click', (e) => { if (e.target === document.getElementById('inboxModal')) document.getElementById('inboxModal').style.display = 'none'; if (e.target === document.getElementById('forwardModal')) document.getElementById('forwardModal').style.display = 'none'; });
     
     window.logout = async () => { await signOut(auth); window.location.href = 'login.html'; };
     
