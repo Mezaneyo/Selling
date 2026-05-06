@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Feedback - Msika Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .feedback-type {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .type-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .type-btn.active {
+            border-color: #667eea;
+            background: rgba(102,126,234,0.1);
+            color: #667eea;
+        }
+        
+        .rating-stars {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .star {
+            font-size: 40px;
+            cursor: pointer;
+            color: #ddd;
+            transition: color 0.2s;
+        }
+        
+        .star.active {
+            color: #ffc107;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .toast.show {
+            opacity: 1;
+        }
+        
+        .footer {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 40px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .footer-links a:hover {
+            color: #667eea;
+        }
+        
+        .copyright {
+            color: #999;
+            font-size: 12px;
+        }
+        
+        @media (max-width: 768px) {
+            .card {
+                padding: 20px;
+            }
+            .star {
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-btn" onclick="window.location.href='dashboard.html'">← Back</button>
+        <div class="logo">💬 Feedback</div>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <h2 style="margin-bottom: 20px;">We Value Your Feedback!</h2>
+            <p style="color: #666; margin-bottom: 25px;">Help us improve Msika Marketplace by sharing your thoughts, suggestions, or reporting any issues.</p>
+            
+            <div class="feedback-type">
+                <div class="type-btn active" data-type="suggestion">💡 Suggestion</div>
+                <div class="type-btn" data-type="bug">🐛 Bug Report</div>
+                <div class="type-btn" data-type="feature">✨ Feature Request</div>
+                <div class="type-btn" data-type="complaint">😞 Complaint</div>
+                <div class="type-btn" data-type="praise">🎉 Praise</div>
+            </div>
+            
+            <div id="ratingSection" style="display: none;">
+                <label>Your Rating</label>
+                <div class="rating-stars" id="ratingStars">
+                    <span class="star" data-rating="1">★</span>
+                    <span class="star" data-rating="2">★</span>
+                    <span class="star" data-rating="3">★</span>
+                    <span class="star" data-rating="4">★</span>
+                    <span class="star" data-rating="5">★</span>
+                </div>
+            </div>
+            
+            <form id="feedbackForm">
+                <div class="form-group">
+                    <label>Subject *</label>
+                    <input type="text" id="subject" placeholder="Brief summary of your feedback" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Your Feedback *</label>
+                    <textarea id="message" rows="5" placeholder="Please provide detailed feedback..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Your Email (optional - for follow-up)</label>
+                    <input type="email" id="email" placeholder="Enter your email if you'd like a response">
+                </div>
+                
+                <button type="submit" class="submit-btn">Submit Feedback</button>
+            </form>
+        </div>
+        
+        <div class="card">
+            <h3 style="margin-bottom: 15px;">📊 Recent Feedback</h3>
+            <div id="recentFeedback" style="color: #666; text-align: center; padding: 20px;">
+                Loading recent feedback...
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="footer-links">
+            <a href="about.html">About Us</a>
+            <a href="contact.html">Contact</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="feedback.html">Feedback</a>
+        </div>
+        <div class="copyright">© 2025 Msika Marketplace. All rights reserved.</div>
+    </div>
+    
+    <div class="toast" id="toast">Feedback submitted! Thank you 🙏</div>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAadEukg8HmIUwJ6BC2oYYwbz0qb19iR2I",
+            authDomain: "msika-2.firebaseapp.com",
+            projectId: "msika-2",
+            storageBucket: "msika-2.firebasestorage.app",
+            messagingSenderId: "826396419263",
+            appId: "1:826396419263:web:1fb8752bafd530ba81520a"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        let currentUser = null;
+        let selectedType = 'suggestion';
+        let selectedRating = 0;
+        
+        // Feedback type selection
+        document.querySelectorAll('.type-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedType = btn.dataset.type;
+                
+                // Show rating section only for product feedback/praise
+                if (selectedType === 'praise' || selectedType === 'complaint') {
+                    document.getElementById('ratingSection').style.display = 'block';
+                } else {
+                    document.getElementById('ratingSection').style.display = 'none';
+                }
+            });
+        });
+        
+        // Star rating
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', () => {
+                selectedRating = parseInt(star.dataset.rating);
+                document.querySelectorAll('.star').forEach((s, index) => {
+                    if (index < selectedRating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+        });
+        
+        // Load recent feedback
+        async function loadRecentFeedback() {
+            try {
+                const feedbackRef = collection(db, "feedback");
+                const q = query(feedbackRef, orderBy("createdAt", "desc"), limit(5));
+                const snapshot = await getDocs(q);
+                
+                const container = document.getElementById('recentFeedback');
+                
+                if (snapshot.empty) {
+                    container.innerHTML = '<div style="text-align: center; padding: 20px;">No feedback yet. Be the first to share your thoughts!</div>';
+                    return;
+                }
+                
+                let html = '';
+                for (const docSnap of snapshot.docs) {
+                    const fb = docSnap.data();
+                    const date = fb.createdAt?.toDate ? fb.createdAt.toDate().toLocaleDateString() : 'Recent';
+                    const typeIcon = {
+                        'suggestion': '💡',
+                        'bug': '🐛',
+                        'feature': '✨',
+                        'complaint': '😞',
+                        'praise': '🎉'
+                    }[fb.type] || '📝';
+                    
+                    html += `
+                        <div style="background: #f8f9fa; border-radius: 12px; padding: 15px; margin-bottom: 15px; border-left: 4px solid #667eea;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <div>
+                                    <span style="font-size: 18px;">${typeIcon}</span>
+                                    <strong>${escapeHtml(fb.subject || 'Feedback')}</strong>
+                                </div>
+                                <small style="color: #999;">${date}</small>
+                            </div>
+                            <p style="color: #666; font-size: 13px; margin-top: 5px;">${escapeHtml(fb.message?.substring(0, 100))}${fb.message?.length > 100 ? '...' : ''}</p>
+                            ${fb.rating ? `<div style="margin-top: 8px; color: #ffc107;">${'★'.repeat(fb.rating)}${'☆'.repeat(5-fb.rating)}</div>` : ''}
+                        </div>
+                    `;
+                }
+                container.innerHTML = html;
+            } catch (error) {
+                console.error("Error loading feedback:", error);
+                document.getElementById('recentFeedback').innerHTML = '<div style="text-align: center; padding: 20px;">Unable to load feedback</div>';
+            }
+        }
+        
+        // Submit feedback
+        document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const subject = document.getElementById('subject').value.trim();
+            const message = document.getElementById('message').value.trim();
+            const email = document.getElementById('email').value.trim();
+            
+            if (!subject || !message) {
+                alert('Please fill in subject and message');
+                return;
+            }
+            
+            const submitBtn = document.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            try {
+                await addDoc(collection(db, "feedback"), {
+                    type: selectedType,
+                    subject: subject,
+                    message: message,
+                    email: email || null,
+                    rating: selectedRating > 0 ? selectedRating : null,
+                    userId: currentUser?.uid || null,
+                    userName: currentUser?.displayName || 'Guest',
+                    userEmail: currentUser?.email || email || 'anonymous',
+                    status: 'pending',
+                    createdAt: new Date()
+                });
+                
+                const toast = document.getElementById('toast');
+                toast.textContent = '✅ Feedback submitted! Thank you 🙏';
+                toast.classList.add('show');
+                
+                document.getElementById('feedbackForm').reset();
+                selectedRating = 0;
+                document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+                
+                setTimeout(() => toast.classList.remove('show'), 3000);
+                
+                // Reload feedback
+                await loadRecentFeedback();
+                
+            } catch (error) {
+                console.error("Error submitting feedback:", error);
+                alert('Failed to submit feedback. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+        
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user && user.email) {
+                document.getElementById('email').value = user.email;
+            }
+            loadRecentFeedback();
+        });
+    </script>
+</body>
+</html>
